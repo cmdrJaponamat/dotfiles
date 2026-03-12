@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Get random image file name
+#IMG_NAME=$(ls /home/japonamat/.config/hypr/wallpapers | shuf -n 1)
+# full path to that random image file
+#IMG_PATH=/home/japonamat/.config/hypr/wallpapers/$IMG_NAME
+cp /home/japonamat/.config/hypr/wallpapers/vimCheatSheet.png ~/.cache/swww/curent_walpaper.jpg
+
+# Command to change wallpaper
+swww img /home/japonamat/.config/hypr/wallpapers/vimCheatSheet.png --transition-fps 10 --transition-type random --transition-step 200

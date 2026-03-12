@@ -1,0 +1,22 @@
+*.log
+*.bak
+*.swp
+*.tmp
+.DS_Store
+
+fish/fish_variables
+btop/btop.log
+micro/buffers/
+micro/backups/
+
+**/__pycache__/
+**/*.pyc
+**/node_modules/
+**/Cache/
+**/Code Cache/
+**/GPUCache/
+**/Crashpad/
+**/Session Storage/
+**/Local Storage/
+**/IndexedDB/
+**/blob_storage/

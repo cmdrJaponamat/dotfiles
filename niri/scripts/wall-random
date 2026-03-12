@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eu
+
+wallpaper_dir="$HOME/.config/hypr/wallpapers"
+state_dir="$HOME/.cache/niri"
+state_file="$state_dir/current_wallpaper"
+
+mkdir -p "$state_dir"
+
+mapfile -d '' wallpapers < <(find "$wallpaper_dir" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -print0)
+
+if [ "${#wallpapers[@]}" -eq 0 ]; then
+    exit 1
+fi
+
+wallpaper="$(printf '%s\0' "${wallpapers[@]}" | shuf -z -n 1 | tr -d '\0')"
+printf '%s\n' "$wallpaper" > "$state_file"
+
+exec swww img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20

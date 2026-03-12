@@ -1,0 +1,209 @@
+{
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    
+    //"height": 20, // Waybar height (to be removed for auto height)
+    // Archived modules
+    // "custom/gpu",  "custom/weather","sway/window", "custom/gpu",  "custom/media",  
+    // Choose the order of the modules
+
+    "modules-left": ["clock#time", "clock#date", "hyprland/language", "custom/pacman", "idle_inhibitor", "custom/playerctl"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["temperature", "cpu", "custom/gpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
+    
+    // Modules configuration
+    "hyprland/workspaces": {
+        //"disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "urgent": "",
+            "focused": "",
+            "default": ""
+        }
+    },
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "sway/window": {
+        "format": "{}",
+        "max-length": 50, 
+        "tooltip": false
+    },
+    "bluetooth": {
+        "interval": 30,
+        "format": "{icon}",
+        // "format-alt": "{status}",
+        "format-icons": {
+            "enabled": "",
+            "disabled": "󰂲"
+        },
+        "tooltip-format": "{status}",
+        "on-click": "blueman-manager",
+        "on-click-right": "blueman-adapters"
+    },    
+    "hyprland/language": {
+        "format": "   {}",
+        "format-en": "En",
+        "format-ru": "Ru",
+        "max-length": 5,
+        "min-length": 4
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        },
+        "tooltip": true
+    },
+    "tray": {
+        //"icon-size": 14,
+        "spacing": 4
+    },
+    "clock#time": {
+        "interval": 10,
+        "format": "  {:%H:%M}",
+        "tooltip": false
+    },
+    "clock#date": {
+        "interval": 20,
+        "format": "  {:%a %Y %b %d}",
+        "on-click": "alacritty --class calendar -e calcure",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "today-format": "<b><u>{}</u></b>"
+    },    
+    "temperature": {
+        //"thermal-zone": 1,
+        "interval": 1,
+        "critical-threshold": 75,
+        "format-critical": "  {temperatureC}°C",
+        "format": "{icon}  {temperatureC}°C",
+        "format-icons": ["", "", ""],
+        "max-length": 8,
+        "min-length": 7,
+        "tooltip": false
+    },
+    "cpu": {
+        "interval": 5,      
+        "format": "  {max_frequency:1}GHz  󰓅  {usage:2}%",
+        "on-click": "alacritty -e btop",
+        "tooltip": false
+    },
+    "custom/gpu": {
+      "exec": "$HOME/.config/hypr/component/waybar/custom_modules/custom-gpu-lite.sh",
+      "return-type": "json",
+      "format": "{}",
+      "interval": 5,
+      "tooltip": true
+    },
+    "network": {
+        // "interface": "wlan0", // (Optional) To force the use of this interface,
+        "format-wifi": "<span color=\"#ebdbb2\"> </span>  {essid}",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr}  ",
+        "format-linked": "{ifname} (No IP) 󰈁",
+        "format-disconnected": "󱚵 ",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "family": "ipv4",
+        "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}",
+        "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}"
+    },
+
+
+    "custom/kdeconnect": {
+      "exec": "$HOME/.config/hypr/component/waybar/custom_modules/custom-kdeconnect.sh battery",
+      "format": " {}",
+      "interval": 60,
+      "on-click": "$HOME/.config/hypr/component/waybar/custom_modules/custom-kdeconnect.sh ring"
+    },   
+
+    "battery": {
+        "states": {
+            "warning": 50,
+            "critical": 20
+        },
+        "format": "{icon}  {capacity}%",
+        "format-good": "{icon}  {capacity}%",
+        "format-full": "{icon}  {capacity}%",
+        "format-charging": "{icon}  {capacity}%",
+        "format-plugged": "{icon} {capacity}%",
+        "format-icons": [" ", " ", " ", " ", " "]
+    },
+
+    "pulseaudio": {
+        "scroll-step": 3, // %, can be a float
+        "format": "{icon}  {volume:3}% {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": "󰗿 {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": "",
+        "format-source-muted": "<span color=\"#fb4833\"></span>",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "󰋎",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", " ", " "]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+    },
+    "custom/pacman": {
+        "format": "<big>󰚰</big>  {}",
+        "interval": 3600,                     // every hour
+        "exec": "checkupdates | wc -l",       // # of updates
+        "exec-if": "exit 0",                  // always run; consider advanced run conditions
+        "on-click": "alacritty -e 'paru'; pkill -SIGRTMIN+8 waybar", // update system
+        "signal": 8,
+        "max-length": 5,
+        "min-length": 3
+    },
+    "custom/weather": {
+        "exec": "curl 'https://wttr.in/?format=1'",
+        "interval": 3600
+    },
+    "custom/cpugovernor": {
+      "format": "{icon}",
+      "interval": "once",
+      "return-type": "json",
+      "exec": "$HOME/.config/hypr/component/waybar/custom_modules/cpugovernor.sh",
+      "min-length": 2,
+      "max-length": 3,
+      "signal": 8,
+        "format-icons": {
+            "perf": "",
+            "ondemand": ""
+        },
+        "on-click": "$HOME/.config/hypr/component/waybar/custom_modules/cpugovernor.sh switch"
+        // Requires cpupower to switch governors
+    },
+    "custom/playerctl": {
+        "exec": "$HOME/.config/hypr/component/waybar/custom_modules/media-player-status.py",
+        "return-type": "json",
+        "on-click": "playerctl play-pause"
+    },
+    "custom/media": {
+        "format": "{icon} {}",
+        "return-type": "json",
+        "max-length": 40,
+        "format-icons": {
+            "spotify": "",
+            "default": "🎜"
+        },
+        "escape": false,
+        "exec": "$HOME/.config/hypr/component/waybar/custom_modules/mediaplayer.py 2> /dev/null" // Script in resources folder
+        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on 
+    },
+    
+}

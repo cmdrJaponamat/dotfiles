@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu
+
+wallpaper="$HOME/.config/hypr/wallpapers/vimCheatSheet.png"
+state_dir="$HOME/.cache/niri"
+state_file="$state_dir/current_wallpaper"
+
+mkdir -p "$state_dir"
+printf '%s\n' "$wallpaper" > "$state_file"
+
+exec swww img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20

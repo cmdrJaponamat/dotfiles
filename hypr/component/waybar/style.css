@@ -1,0 +1,293 @@
+
+@keyframes blink-warning {
+    70% {
+        color: @light;
+    }
+
+    to {
+        color: @light;
+        background-color: @warning;
+    }
+}
+
+@keyframes blink-critical {
+    70% {
+      color: @light;
+    }
+
+    to {
+        color: @light;
+        background-color: @critical;
+    }
+}
+
+
+/* -----------------------------------------------------------------------------
+ * Styles
+ * -------------------------------------------------------------------------- */
+
+/* COLORS */
+
+/* Gruvbox Dark */
+
+/*@define-color bg #353C4A;*/
+@define-color bg #282828;
+@define-color bg0 #1d2021;
+@define-color bg1 #3c3836;
+@define-color bg2 #504945;
+@define-color fg #ebdbb2;
+@define-color fg-muted #a89984;
+@define-color red #fb4934;
+@define-color green #b8bb26;
+@define-color yellow #fabd2f;
+@define-color blue #83a598;
+@define-color aqua #8ec07c;
+@define-color purple #d3869b;
+@define-color orange #fe8019;
+@define-color warning #fabd2f;
+@define-color critical #fb4934;
+
+@define-color left-bg #458588;
+@define-color left-alt #689d6a;
+@define-color center-bg #d79921;
+@define-color center-fg #282828;
+@define-color right-bg #3c3836;
+@define-color right-accent #504945;
+@define-color battery-bg #8f3f71;
+
+/* Reset all styles */
+* {
+    border: none;
+    border-radius: 8px;
+    min-height: 0;
+    /*margin: 0.15em 0.25em 0.15em 0.25em;*/
+}
+
+/* The whole bar */
+window#waybar {
+    background: @bg0;
+    color: @fg;
+    font-family: "Cantarell", "Ubuntu Nerd Font";/*Font Awesome 5 Pro*/
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+/* Each module */
+#battery,
+#clock,
+#cpu,
+#custom-layout,
+#memory,
+#mode,
+#network,
+#pulseaudio,
+#temperature,
+#custom-alsa,
+#custom-pacman,
+#custom-weather,
+#custom-gpu,
+#custom-playerctl,
+#tray,
+#backlight,
+#language,
+#custom-cpugovernor,
+#custom-scratchpad-indicator,
+#custom-pacman,
+#idle_inhibitor,
+#bluetooth {
+/*    padding-left: 0.3em;
+    padding-right: 0.3em;*/
+    padding: 0.6em 0.8em;
+    margin: 0.45em 0.3em;
+    border-radius: 10px;
+}
+
+/* Each module that should blink */
+#mode,
+#memory,
+#temperature,
+#battery {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* Each critical module */
+#memory.critical,
+#cpu.critical,
+#temperature.critical,
+#battery.critical {
+    color: @critical;
+}
+
+/* Each critical that should blink */
+#mode,
+#memory.critical,
+#temperature.critical,
+#battery.critical {
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+/* Each warning */
+#network.disconnected,
+#memory.warning,
+#cpu.warning,
+#temperature.warning,
+#battery.warning {
+    background: @warning;
+    color: @bg0;
+}
+
+/* Each warning that should blink */
+#battery.warning {
+    animation-name: blink-warning;
+    animation-duration: 3s;
+}
+
+/* Module colors */
+#clock.time {
+    background: @left-bg;
+    color: @fg;
+}
+#clock.date {
+    background: @left-alt;
+    color: @bg0;
+}
+
+#custom-scratchpad-indicator {
+    background: @left-alt;
+    color: @bg0;
+}
+#language {
+    background: @left-bg;
+    color: @fg;
+}
+#custom-kdeconnect {
+    background: @left-bg;
+    color: @fg;
+}
+#custom-pacman {
+    background: @left-alt;
+    color: @bg0;
+}
+#idle_inhibitor {
+    background: @bg2;
+    color: @fg;
+}
+#custom-playerctl {
+    font-size: 0.9em;
+    background: @bg0;
+    color: @fg-muted;
+}
+#custom-playerctl.paused{
+    color: @fg-muted;
+    font-size: 0.9em;
+}
+/* Workspaces stuff */
+#workspaces {
+}
+#workspaces button {
+    font-size: 16px;
+    font-weight: bolder;
+    background: @center-bg;
+    padding: 0em 1.2em;
+    margin: 0.45em 0.25em;
+    color: @center-fg;
+    min-width: 0em;
+}
+#workspaces button.focused {
+    font-weight: bolder; /* Somewhy the bar-wide setting is ignored*/
+    font-size: 18px;
+    background: @yellow;
+    color: @bg0;
+}
+#workspaces button.urgent {
+    color: @red;
+    opacity: 1;
+}
+#custom-cpugovernor {
+    background-color: @right-accent;
+    color: @fg;
+}
+#custom-cpugovernor.perf {
+    
+}
+#cpu {
+    background: @right-bg;
+    color: @fg;
+    padding-left: 0em;
+    padding-right: 0.2em;
+}
+#cpu.critical {
+    color: @bg0;
+    background: @critical;
+}
+#temperature {
+    background-color: @right-bg;
+    color: @fg;
+    padding-right: 0em;
+}
+#temperature.critical {
+    background:  @critical;
+    color: @bg0;
+}
+#custom-gpu {
+    background: @right-bg;
+    color: @fg;
+    padding-left: 0em;    
+}
+#pulseaudio {
+    background: @right-accent;
+    color: @fg;
+}
+#pulseaudio.muted {
+    color: @red;
+}
+#pulseaudio.source-muted {
+    /* moved to config */
+}
+#bluetooth {
+    background: @right-accent;
+    color: @blue;
+}
+#network {
+    background: @right-accent;
+    color: @aqua;
+}
+#tray {
+    background: @right-accent;
+    color: @fg;
+}
+
+#custom-alsa {
+    background: @right-bg;
+}
+#memory {
+    background: @right-bg;
+}
+#custom-layout {
+    background: @center-bg;
+}
+#mode { /* Shown current Sway mode (resize etc.) */
+    color: @fg;
+    background: @bg1;
+}
+#battery {
+    background: @battery-bg;
+    color: @fg;
+}
+
+#backlight {
+    background: @right-accent;
+}
+#window {
+    margin-right: 40px;
+    margin-left: 40px;
+    font-weight: normal;
+}
+#custom-weather {
+    background: @right-accent;
+    font-weight: bold;
+    padding: 0 0.6em;
+}

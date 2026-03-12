@@ -1,0 +1,4 @@
+#!/usr/bin/bash 
+
+#grim -t jpeg -g "$(slurp)" -o screenshot
+grim -t jpeg - | wl-copy 
