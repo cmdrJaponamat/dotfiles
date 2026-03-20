@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+Description = Mark AI package inventory as stale after pacman transaction
+When = PostTransaction
+Exec = /usr/bin/runuser -u @USER@ -- @HOME@/.local/bin/ai-system-inventory mark-stale package_versions pacman transaction completed
