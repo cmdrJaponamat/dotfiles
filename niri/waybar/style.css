@@ -86,6 +86,8 @@ window#waybar {
 #custom-pacman,
 #custom-weather,
 #custom-playerctl,
+#custom-niri-language,
+#custom-power-draw,
 #tray,
 #backlight,
 #language,
@@ -166,6 +168,14 @@ window#waybar {
     background: @left-bg;
     color: @fg;
 }
+#custom-niri-language {
+    background: transparent;
+    color: @fg;
+    font-size: 1.15em;
+    font-weight: 900;
+    padding: 0.25em 0.6em 0.1em 0.6em;
+    margin: 0.35em 0.4em 0.15em 0.4em;
+}
 #custom-pacman {
     background: @left-alt;
     color: @bg0;
@@ -189,6 +199,18 @@ window#waybar {
 #custom-touchscreen.off {
     background: @orange;
     color: @bg0;
+}
+#custom-power-draw {
+    background: @right-accent;
+    color: @fg;
+    padding: 0.55em 0.75em;
+}
+#custom-power-draw.hidden {
+    background: transparent;
+    color: transparent;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
 }
 #custom-playerctl {
     font-size: 0.9em;

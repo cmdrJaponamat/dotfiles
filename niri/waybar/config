@@ -7,9 +7,9 @@
     // "custom/gpu",  "custom/weather","sway/window", "custom/gpu",  "custom/media",  
     // Choose the order of the modules
 
-    "modules-left": ["clock#time", "clock#date", "custom/niri-language", "custom/pacman", "custom/touchscreen", "custom/playerctl"],
-    "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["temperature", "cpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
+    "modules-left": ["clock#time", "clock#date", "custom/pacman", "custom/touchscreen", "custom/playerctl"],
+    "modules-center": ["custom/niri-language", "hyprland/workspaces"],
+    "modules-right": ["custom/power-draw", "temperature", "cpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
     
     // Modules configuration
     "hyprland/workspaces": {
@@ -56,8 +56,8 @@
         "return-type": "json",
         "format": "{}",
         "interval": 2,
-        "max-length": 6,
-        "min-length": 5
+        "max-length": 8,
+        "min-length": 6
     },
     "custom/pacman": {
         "exec": "$HOME/.config/niri/waybar/custom_modules/pacman-status.sh status",
@@ -122,6 +122,12 @@
         "interval": "once",
         "signal": 9,
         "on-click": "alacritty -e bash -lc '$HOME/.config/niri/waybar/custom_modules/touchscreen-toggle.sh toggle'"
+    },
+    "custom/power-draw": {
+        "exec": "python $HOME/.config/niri/waybar/custom_modules/power-draw.py",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 30
     },
     "custom/kdeconnect": {
       "exec": "$HOME/.config/hypr/component/waybar/custom_modules/custom-kdeconnect.sh battery",
