@@ -85,7 +85,6 @@ window#waybar {
 #custom-alsa,
 #custom-pacman,
 #custom-weather,
-#custom-gpu,
 #custom-playerctl,
 #tray,
 #backlight,
@@ -93,8 +92,7 @@ window#waybar {
 #custom-cpugovernor,
 #custom-scratchpad-indicator,
 #custom-pacman,
-#idle_inhibitor,
-#custom-utilities,
+#custom-touchscreen,
 #bluetooth {
 /*    padding-left: 0.3em;
     padding-right: 0.3em;*/
@@ -171,16 +169,16 @@ window#waybar {
 #custom-pacman {
     background: @left-alt;
     color: @bg0;
+    padding-left: 0.7em;
+    padding-right: 0.7em;
 }
-#idle_inhibitor {
-    background: @bg2;
-    color: @fg;
-}
-#custom-utilities {
+#custom-touchscreen {
     background: @left-alt;
     color: @bg0;
+    padding-left: 0.7em;
+    padding-right: 0.7em;
 }
-#custom-utilities.attention {
+#custom-touchscreen.off {
     background: @orange;
     color: @bg0;
 }
@@ -240,11 +238,6 @@ window#waybar {
 #temperature.critical {
     background:  @critical;
     color: @bg0;
-}
-#custom-gpu {
-    background: @right-bg;
-    color: @fg;
-    padding-left: 0em;    
 }
 #pulseaudio {
     background: @right-accent;

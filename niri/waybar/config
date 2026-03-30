@@ -7,9 +7,9 @@
     // "custom/gpu",  "custom/weather","sway/window", "custom/gpu",  "custom/media",  
     // Choose the order of the modules
 
-    "modules-left": ["clock#time", "clock#date", "hyprland/language", "custom/utilities", "custom/playerctl"],
+    "modules-left": ["clock#time", "clock#date", "hyprland/language", "custom/pacman", "custom/touchscreen", "custom/playerctl"],
     "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["temperature", "cpu", "custom/gpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
+    "modules-right": ["temperature", "cpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
     
     // Modules configuration
     "hyprland/workspaces": {
@@ -58,13 +58,16 @@
         "max-length": 5,
         "min-length": 4
     },
-    "custom/utilities": {
-        "exec": "$HOME/.config/niri/waybar/custom_modules/utilities-menu.sh status",
-        "return-type": "json",
-        "format": "{}",
-        "interval": 600,
-        "signal": 9,
-        "on-click": "$HOME/.config/niri/waybar/custom_modules/utilities-menu.sh menu"
+    "custom/pacman": {
+        "format": "󰚰",
+        "tooltip-format": "System update",
+        "interval": 3600,
+        "exec": "checkupdates | wc -l",
+        "exec-if": "exit 0",
+        "on-click": "alacritty -e bash -lc 'paru; pkill -SIGRTMIN+8 waybar'",
+        "signal": 8,
+        "max-length": 2,
+        "min-length": 1
     },
     "tray": {
         //"icon-size": 14,
@@ -99,13 +102,6 @@
         "on-click": "alacritty -e btop",
         "tooltip": false
     },
-    "custom/gpu": {
-      "exec": "$HOME/.config/hypr/component/waybar/custom_modules/custom-gpu-lite.sh",
-      "return-type": "json",
-      "format": "{}",
-      "interval": 5,
-      "tooltip": true
-    },
     "network": {
         // "interface": "wlan0", // (Optional) To force the use of this interface,
         "format-wifi": "<span color=\"#ebdbb2\"> </span>  {essid}",
@@ -119,6 +115,14 @@
     },
 
 
+    "custom/touchscreen": {
+        "exec": "$HOME/.config/niri/waybar/custom_modules/touchscreen-toggle.sh status",
+        "return-type": "json",
+        "format": "{}",
+        "interval": "once",
+        "signal": 9,
+        "on-click": "alacritty -e bash -lc '$HOME/.config/niri/waybar/custom_modules/touchscreen-toggle.sh toggle'"
+    },
     "custom/kdeconnect": {
       "exec": "$HOME/.config/hypr/component/waybar/custom_modules/custom-kdeconnect.sh battery",
       "format": " {}",

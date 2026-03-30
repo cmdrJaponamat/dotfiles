@@ -12,9 +12,9 @@ is_enabled() {
 
 print_status() {
     if is_enabled; then
-        printf '{"text":"󰍹","tooltip":"Touchscreen: on\\nLeft click: toggle"}\n'
+        printf '{"text":"󰍹","class":"on","tooltip":"Touchscreen: on\\nLeft click: toggle"}\n'
     else
-        printf '{"text":"󰍺","tooltip":"Touchscreen: off\\nLeft click: toggle"}\n'
+        printf '{"text":"󰍺","class":"off","tooltip":"Touchscreen: off\\nLeft click: toggle"}\n'
     fi
 }
 

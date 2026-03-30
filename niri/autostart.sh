@@ -65,4 +65,3 @@ if [ -x "$hypr_config/scripts/rgb" ]; then
 fi
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 Telegram &
-slimbookbattery --minimize &
