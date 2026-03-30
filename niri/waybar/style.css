@@ -94,6 +94,7 @@ window#waybar {
 #custom-scratchpad-indicator,
 #custom-pacman,
 #idle_inhibitor,
+#custom-utilities,
 #bluetooth {
 /*    padding-left: 0.3em;
     padding-right: 0.3em;*/
@@ -174,6 +175,14 @@ window#waybar {
 #idle_inhibitor {
     background: @bg2;
     color: @fg;
+}
+#custom-utilities {
+    background: @left-alt;
+    color: @bg0;
+}
+#custom-utilities.attention {
+    background: @orange;
+    color: @bg0;
 }
 #custom-playerctl {
     font-size: 0.9em;

@@ -34,6 +34,9 @@ case "${1:-status}" in
     status)
         print_status
         ;;
+    is-enabled)
+        is_enabled
+        ;;
     toggle)
         toggle_touchscreen
         ;;

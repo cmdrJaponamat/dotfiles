@@ -17,7 +17,7 @@ else
     text="󰢮 ${gpu_temp}°C"
 fi
 
-deviceinfo=$(lspci | grep -Ei 'vga|3d|display' | head -n 1 | sed 's/^[^ ]* //')
+deviceinfo=$(lspci | grep -Ei 'vga|3d|display' | head -n 1 | sed 's/^[^ ]* //' | sed 's/^VGA compatible controller: //')
 if [ -z "$deviceinfo" ]; then
     deviceinfo="GPU"
 fi
