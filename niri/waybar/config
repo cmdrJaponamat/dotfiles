@@ -7,7 +7,7 @@
     // "custom/gpu",  "custom/weather","sway/window", "custom/gpu",  "custom/media",  
     // Choose the order of the modules
 
-    "modules-left": ["clock#time", "clock#date", "hyprland/language", "custom/pacman", "custom/touchscreen", "custom/playerctl"],
+    "modules-left": ["clock#time", "clock#date", "custom/niri-language", "custom/pacman", "custom/touchscreen", "custom/playerctl"],
     "modules-center": ["hyprland/workspaces"],
     "modules-right": ["temperature", "cpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
     
@@ -51,12 +51,13 @@
         "on-click": "blueman-manager",
         "on-click-right": "blueman-adapters"
     },    
-    "hyprland/language": {
-        "format": "   {}",
-        "format-en": "En",
-        "format-ru": "Ru",
-        "max-length": 5,
-        "min-length": 4
+    "custom/niri-language": {
+        "exec": "$HOME/.config/niri/waybar/custom_modules/niri-language.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 2,
+        "max-length": 6,
+        "min-length": 5
     },
     "custom/pacman": {
         "exec": "$HOME/.config/niri/waybar/custom_modules/pacman-status.sh status",
