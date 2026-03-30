@@ -9,7 +9,7 @@
 
     "modules-left": ["clock#time", "clock#date", "hyprland/language", "custom/pacman", "idle_inhibitor", "custom/playerctl"],
     "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["temperature", "cpu", "custom/gpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
+    "modules-right": ["temperature", "cpu", "custom/gpu", "custom/touchscreen", "network", "bluetooth", "pulseaudio", "battery", "tray"],
     
     // Modules configuration
     "hyprland/workspaces": {
@@ -105,6 +105,14 @@
       "format": "{}",
       "interval": 5,
       "tooltip": true
+    },
+    "custom/touchscreen": {
+        "exec": "$HOME/.config/niri/waybar/custom_modules/touchscreen-toggle.sh status",
+        "return-type": "json",
+        "format": "{}",
+        "interval": "once",
+        "signal": 9,
+        "on-click": "alacritty -e bash -lc '$HOME/.config/niri/waybar/custom_modules/touchscreen-toggle.sh toggle'"
     },
     "network": {
         // "interface": "wlan0", // (Optional) To force the use of this interface,
