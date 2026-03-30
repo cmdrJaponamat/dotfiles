@@ -8,8 +8,8 @@
     // Choose the order of the modules
 
     "modules-left": ["clock#time", "clock#date", "custom/pacman", "custom/touchscreen", "custom/playerctl"],
-    "modules-center": ["custom/niri-language", "hyprland/workspaces"],
-    "modules-right": ["custom/power-draw", "temperature", "cpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["custom/power-draw", "temperature", "cpu", "network", "bluetooth", "pulseaudio", "battery", "custom/niri-language", "tray"],
     
     // Modules configuration
     "hyprland/workspaces": {

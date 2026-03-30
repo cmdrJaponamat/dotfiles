@@ -169,12 +169,24 @@ window#waybar {
     color: @fg;
 }
 #custom-niri-language {
-    background: transparent;
+    background: @right-accent;
     color: @fg;
-    font-size: 1.15em;
+    font-size: 1.2em;
     font-weight: 900;
-    padding: 0.25em 0.6em 0.1em 0.6em;
-    margin: 0.35em 0.4em 0.15em 0.4em;
+    padding: 0.5em 0.8em;
+    min-width: 3.2em;
+}
+#custom-niri-language.en {
+    background: @blue;
+    color: @bg0;
+}
+#custom-niri-language.ru {
+    background: @green;
+    color: @bg0;
+}
+#custom-niri-language.unknown {
+    background: @bg2;
+    color: @fg-muted;
 }
 #custom-pacman {
     background: @left-alt;

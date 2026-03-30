@@ -41,17 +41,21 @@ print(names[idx] if isinstance(idx, int) and 0 <= idx < len(names) else "")
 case "$current_layout" in
     "English (US)")
         text="En"
+        class="en"
         ;;
     "Russian")
         text="Ru"
+        class="ru"
         ;;
     "")
         text="??"
+        class="unknown"
         current_layout="Layout unavailable"
         ;;
     *)
         text="$(printf '%s' "$current_layout" | cut -c1-2)"
+        class="unknown"
         ;;
 esac
 
-printf '{"text":"   %s","tooltip":"Keyboard layout: %s"}\n' "$text" "$current_layout"
+printf '{"text":" %s","tooltip":"Keyboard layout: %s","class":["%s"]}\n' "$text" "$current_layout" "$class"
