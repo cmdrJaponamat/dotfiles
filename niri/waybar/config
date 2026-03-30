@@ -59,14 +59,13 @@
         "min-length": 4
     },
     "custom/pacman": {
-        "format": "󰚰",
-        "tooltip-format": "System update",
+        "exec": "$HOME/.config/niri/waybar/custom_modules/pacman-status.sh status",
+        "return-type": "json",
+        "format": "{}",
         "interval": 3600,
-        "exec": "checkupdates | wc -l",
-        "exec-if": "exit 0",
         "on-click": "alacritty -e bash -lc 'paru; pkill -SIGRTMIN+8 waybar'",
         "signal": 8,
-        "max-length": 2,
+        "max-length": 4,
         "min-length": 1
     },
     "tray": {

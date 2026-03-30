@@ -169,14 +169,22 @@ window#waybar {
 #custom-pacman {
     background: @left-alt;
     color: @bg0;
-    padding-left: 0.7em;
-    padding-right: 0.7em;
+    padding: 0.55em 0.65em;
+    min-width: 0;
 }
-#custom-touchscreen {
+#custom-pacman.idle {
+    background: @bg2;
+    color: @fg-muted;
+}
+#custom-pacman.updates {
     background: @left-alt;
     color: @bg0;
-    padding-left: 0.7em;
-    padding-right: 0.7em;
+}
+#custom-touchscreen {
+    background: @bg2;
+    color: @fg-muted;
+    padding: 0.55em 0.65em;
+    min-width: 0;
 }
 #custom-touchscreen.off {
     background: @orange;
