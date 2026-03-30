@@ -6,6 +6,15 @@ wallpaper_dir="$HOME/.config/hypr/wallpapers"
 state_dir="$HOME/.cache/niri"
 state_file="$state_dir/current_wallpaper"
 
+if command -v awww >/dev/null 2>&1; then
+    wallpaper_cmd="awww"
+elif command -v swww >/dev/null 2>&1; then
+    wallpaper_cmd="swww"
+else
+    printf 'No wallpaper backend found: expected awww or swww in PATH\n' >&2
+    exit 1
+fi
+
 mkdir -p "$state_dir"
 
 mapfile -d '' wallpapers < <(find "$wallpaper_dir" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -print0)
@@ -17,4 +26,4 @@ fi
 wallpaper="$(printf '%s\0' "${wallpapers[@]}" | shuf -z -n 1 | tr -d '\0')"
 printf '%s\n' "$wallpaper" > "$state_file"
 
-exec swww img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20
+exec "$wallpaper_cmd" img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20

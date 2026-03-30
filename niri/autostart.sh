@@ -10,6 +10,17 @@ wallpaper_state="$HOME/.cache/niri/current_wallpaper"
 waybar_log="$HOME/.cache/niri/waybar.log"
 default_wallpaper="$wallpaper_dir/home-sweet-home.jpg"
 
+if command -v awww >/dev/null 2>&1 && command -v awww-daemon >/dev/null 2>&1; then
+    wallpaper_cmd="awww"
+    wallpaper_daemon_cmd="awww-daemon"
+elif command -v swww >/dev/null 2>&1 && command -v swww-daemon >/dev/null 2>&1; then
+    wallpaper_cmd="swww"
+    wallpaper_daemon_cmd="swww-daemon"
+else
+    wallpaper_cmd=""
+    wallpaper_daemon_cmd=""
+fi
+
 mkdir -p "$(dirname "$waybar_log")"
 
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri NIRI_SOCKET
@@ -24,12 +35,12 @@ pkill waybar 2>/dev/null || true
 pkill mako 2>/dev/null || true
 mako &
 
-if command -v swww-daemon >/dev/null 2>&1; then
-    pgrep -x swww-daemon >/dev/null || swww-daemon >/dev/null 2>&1 &
+if [ -n "$wallpaper_daemon_cmd" ]; then
+    pgrep -x "$wallpaper_daemon_cmd" >/dev/null || "$wallpaper_daemon_cmd" >/dev/null 2>&1 &
 
     timeout=25
     while [ "$timeout" -gt 0 ]; do
-        if swww query >/dev/null 2>&1; then
+        if "$wallpaper_cmd" query >/dev/null 2>&1; then
             break
         fi
         sleep 0.2
@@ -44,8 +55,8 @@ if command -v swww-daemon >/dev/null 2>&1; then
         fi
     fi
 
-    if [ -f "$wallpaper" ] && swww query >/dev/null 2>&1; then
-        swww img "$wallpaper" --transition-type center --transition-fps 60 --transition-step 20 &
+    if [ -f "$wallpaper" ] && "$wallpaper_cmd" query >/dev/null 2>&1; then
+        "$wallpaper_cmd" img "$wallpaper" --transition-type center --transition-fps 60 --transition-step 20 &
     fi
 fi
 

@@ -6,7 +6,16 @@ wallpaper="$HOME/.config/hypr/wallpapers/vimCheatSheet.png"
 state_dir="$HOME/.cache/niri"
 state_file="$state_dir/current_wallpaper"
 
+if command -v awww >/dev/null 2>&1; then
+    wallpaper_cmd="awww"
+elif command -v swww >/dev/null 2>&1; then
+    wallpaper_cmd="swww"
+else
+    printf 'No wallpaper backend found: expected awww or swww in PATH\n' >&2
+    exit 1
+fi
+
 mkdir -p "$state_dir"
 printf '%s\n' "$wallpaper" > "$state_file"
 
-exec swww img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20
+exec "$wallpaper_cmd" img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20
