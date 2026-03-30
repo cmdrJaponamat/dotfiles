@@ -6,16 +6,39 @@ wallpaper="$HOME/.config/hypr/wallpapers/vimCheatSheet.png"
 state_dir="$HOME/.cache/niri"
 state_file="$state_dir/current_wallpaper"
 
+mkdir -p "$state_dir"
+
 if command -v awww >/dev/null 2>&1; then
-    wallpaper_cmd="awww"
+    wallpaper_cmd="$(command -v awww)"
+    wallpaper_daemon_cmd="$(command -v awww-daemon)"
 elif command -v swww >/dev/null 2>&1; then
-    wallpaper_cmd="swww"
+    wallpaper_cmd="$(command -v swww)"
+    wallpaper_daemon_cmd="$(command -v swww-daemon)"
 else
     printf 'No wallpaper backend found: expected awww or swww in PATH\n' >&2
     exit 1
 fi
 
-mkdir -p "$state_dir"
-printf '%s\n' "$wallpaper" > "$state_file"
+ensure_wallpaper_daemon() {
+    if "$wallpaper_cmd" query >/dev/null 2>&1; then
+        return 0
+    fi
 
+    "$wallpaper_daemon_cmd" >/dev/null 2>&1 &
+
+    retries=25
+    while [ "$retries" -gt 0 ]; do
+        if "$wallpaper_cmd" query >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 0.2
+        retries=$((retries - 1))
+    done
+
+    printf 'Wallpaper daemon did not become ready in time\n' >&2
+    return 1
+}
+
+printf '%s\n' "$wallpaper" > "$state_file"
+ensure_wallpaper_daemon
 exec "$wallpaper_cmd" img "$wallpaper" --transition-fps 60 --transition-type random --transition-step 20
