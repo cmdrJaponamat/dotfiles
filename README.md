@@ -25,11 +25,36 @@ Personal dotfiles for Arch Linux Wayland setup.
 - user-dirs.dirs
 - xdg-terminals.list
 
-## Install
-This repo stores files in the same layout as `~/.config`.
+## Bootstrap
+
+List components and package groups:
 
 ```bash
-cp -a <repo>/* ~/.config/
+./bootstrap.sh --action list
 ```
 
-Or selectively copy only the directories you use.
+Check repo relevance and compare with current live config:
+
+```bash
+./bootstrap.sh --action check
+```
+
+Dry-run a full install:
+
+```bash
+./bootstrap.sh --action install --dry-run
+```
+
+Install selected components and an extra package group:
+
+```bash
+./bootstrap.sh --component niri --component rofi --package-group optional-gui
+```
+
+Use another compatible repo:
+
+```bash
+./bootstrap.sh --repo github-auto:cmdrJaponamat/dotfiles.git --action check
+```
+
+`install.sh` remains as a compatibility wrapper around `bootstrap.sh`.
