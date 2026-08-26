@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v color-pick >/dev/null 2>&1; then
+  exec color-pick
+fi
+
+if command -v hyprpicker >/dev/null 2>&1; then
+  exec hyprpicker -a
+fi
+
+if command -v wl-color-picker >/dev/null 2>&1; then
+  exec wl-color-picker
+fi
+
+echo "No supported color picker found (tried color-pick, hyprpicker, wl-color-picker)." >&2
+exit 1

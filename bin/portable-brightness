@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "Usage: portable-brightness up|down <amount>" >&2
+  exit 1
+fi
+
+direction="$1"
+amount="$2"
+
+case "${direction}" in
+  up)
+    if command -v brightnessctl >/dev/null 2>&1; then
+      exec brightnessctl --class=backlight set "+${amount}%"
+    fi
+    if command -v light >/dev/null 2>&1; then
+      exec light -A "${amount}"
+    fi
+    ;;
+  down)
+    if command -v brightnessctl >/dev/null 2>&1; then
+      exec brightnessctl --class=backlight set "${amount}%-"
+    fi
+    if command -v light >/dev/null 2>&1; then
+      exec light -U "${amount}"
+    fi
+    ;;
+esac
+
+echo "No supported brightness tool found (need brightnessctl or light)." >&2
+exit 1

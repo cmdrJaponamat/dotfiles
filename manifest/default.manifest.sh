@@ -4,6 +4,7 @@ DOTBOOTSTRAP_NAME="japonamat-dotfiles"
 DOTBOOTSTRAP_VERSION="1"
 
 DOTBOOTSTRAP_COMPONENTS=(
+  "local-bin|bin|.local/bin|required|Portable helper scripts"
   "alacritty|alacritty|.config/alacritty|required|Alacritty config"
   "btop|btop|.config/btop|optional|btop config"
   "fish|fish|.config/fish|optional|Fish shell config"
@@ -28,6 +29,7 @@ DOTBOOTSTRAP_COMPONENTS=(
 )
 
 DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
+  "local-bin"
   "alacritty"
   "fish"
   "gtk3"
@@ -56,7 +58,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "editors|neovim micro|Editors"
   "file-tools|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
   "theme|qt5ct qt6ct nwg-look|Theme helpers"
-  "optional-gui|nemo imv telegram-desktop|Optional GUI apps referenced by config"
+  "optional-gui|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
 )
 
 DOTBOOTSTRAP_DEFAULT_PACKAGE_GROUPS=(
@@ -76,5 +78,4 @@ DOTBOOTSTRAP_OPTIONAL_PACKAGE_GROUPS=(
 DOTBOOTSTRAP_RELEVANCE_WARN_PATTERNS=(
   '/home/'
   'userapp-'
-  '~/.local/bin/'
 )

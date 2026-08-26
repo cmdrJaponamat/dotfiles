@@ -324,7 +324,12 @@ run_relevance_check() {
   local pattern
   local warned=0
   for pattern in "${DOTBOOTSTRAP_RELEVANCE_WARN_PATTERNS[@]:-}"; do
-    if rg -n --fixed-strings "${pattern}" "${REPO_DIR}" -g '!**/.git/**' >/tmp/dotbootstrap_warn.$$ 2>/dev/null; then
+    if rg -n --fixed-strings "${pattern}" "${REPO_DIR}" \
+      -g '!**/.git/**' \
+      -g '!**/bk/**' \
+      -g '!**/*.zip' \
+      -g '!manifest/default.manifest.sh' \
+      >/tmp/dotbootstrap_warn.$$ 2>/dev/null; then
       warn "pattern '${pattern}' found in repo:"
       sed 's/^/  /' "/tmp/dotbootstrap_warn.$$"
       warned=1
@@ -355,8 +360,12 @@ copy_component() {
     return
   fi
 
-  rm -rf "${abs_dest}"
-  cp -a "${abs_src}" "${abs_dest}"
+  if [[ -d "${abs_src}" ]]; then
+    mkdir -p "${abs_dest}"
+    cp -a "${abs_src}/." "${abs_dest}/"
+  else
+    cp -a "${abs_src}" "${abs_dest}"
+  fi
 }
 
 install_packages_if_needed() {

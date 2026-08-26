@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Get random image file name
-IMG_NAME=$(ls /home/japonamat/.config/hypr/wallpapers | shuf -n 1)
-# full path to that random image file
-IMG_PATH=/home/japonamat/.config/hypr/wallpapers/$IMG_NAME
-cp /home/japonamat/.config/hypr/wallpapers/$IMG_NAME ~/.cache/swww/curent_walpaper.jpg
+wallpaper_dir="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/wallpapers"
+state_dir="${XDG_CACHE_HOME:-$HOME/.cache}/swww"
 
-# Command to change wallpaper
-swww img $IMG_PATH --transition-fps 10 --transition-type random --transition-step 200
+img_path="$(find "${wallpaper_dir}" -maxdepth 1 -type f | shuf -n 1)"
+mkdir -p "${state_dir}"
+cp "${img_path}" "${state_dir}/curent_walpaper.jpg"
+
+exec swww img "${img_path}" --transition-fps 10 --transition-type random --transition-step 200
