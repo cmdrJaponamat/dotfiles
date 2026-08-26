@@ -23,6 +23,7 @@ Options:
   --hardware-tag TAG
   --skip-hardware-tag TAG
   --hardware-profile auto|desktop|laptop
+  --probe-only
   --dry-run
   --yes
   --help
@@ -51,6 +52,7 @@ SKIPPED_COMPONENTS=()
 SELECTED_PACKAGE_GROUPS=()
 SKIPPED_PACKAGE_GROUPS=()
 HARDWARE_PROFILE="auto"
+PROBE_ONLY=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -106,6 +108,10 @@ while [[ $# -gt 0 ]]; do
     --hardware-profile)
       HARDWARE_PROFILE="${2:?missing hardware profile}"
       shift 2
+      ;;
+    --probe-only)
+      PROBE_ONLY=1
+      shift
       ;;
     --dry-run)
       DRY_RUN=1
@@ -218,8 +224,29 @@ add_hardware_tag() {
   contains "${tag}" "${DETECTED_HARDWARE_TAGS[@]:-}" || DETECTED_HARDWARE_TAGS+=("${tag}")
 }
 
+add_fact() {
+  local fact="$1"
+  [[ -n "${fact}" ]] || return 0
+  HARDWARE_FACTS+=("${fact}")
+}
+
+add_probe_note() {
+  local note="$1"
+  [[ -n "${note}" ]] || return 0
+  HARDWARE_PROBE_NOTES+=("${note}")
+}
+
+add_probe_recommendation() {
+  local rec="$1"
+  [[ -n "${rec}" ]] || return 0
+  HARDWARE_PROBE_RECOMMENDATIONS+=("${rec}")
+}
+
 detect_hardware_tags() {
   DETECTED_HARDWARE_TAGS=()
+  HARDWARE_FACTS=()
+  HARDWARE_PROBE_NOTES=()
+  HARDWARE_PROBE_RECOMMENDATIONS=()
 
   case "${HARDWARE_PROFILE}" in
     laptop)
@@ -240,35 +267,48 @@ detect_hardware_tags() {
     if compgen -G "/sys/class/power_supply/BAT*" >/dev/null; then
       add_hardware_tag "battery"
       add_hardware_tag "laptop"
+      add_fact "battery_present"
     fi
     if compgen -G "/sys/class/backlight/*" >/dev/null; then
       add_hardware_tag "backlight"
+      add_fact "backlight_present"
     fi
     if compgen -G "/sys/class/net/wl*" >/dev/null; then
       add_hardware_tag "wifi"
+      add_fact "wifi_present"
     fi
     if [[ -d /sys/class/bluetooth ]] || compgen -G "/sys/class/rfkill/rfkill*" >/dev/null; then
       add_hardware_tag "bluetooth"
+      add_fact "bluetooth_present"
     fi
     if rg -qi "touchpad|trackpoint" /proc/bus/input/devices 2>/dev/null; then
       add_hardware_tag "touchpad"
       add_hardware_tag "laptop"
+      add_fact "touchpad_present"
+    fi
+    if rg -qi "touchscreen|touch screen|touch digitizer" /proc/bus/input/devices 2>/dev/null; then
+      add_hardware_tag "touchscreen"
+      add_fact "touchscreen_present"
     fi
     if compgen -G "/sys/class/drm/card*-eDP-*" >/dev/null; then
       add_hardware_tag "internal_display"
       add_hardware_tag "laptop"
+      add_fact "internal_display_present"
     fi
   fi
 
   if lspci 2>/dev/null | rg -qi "vga|3d|display"; then
     if lspci 2>/dev/null | rg -qi "intel"; then
       add_hardware_tag "intel_gpu"
+      add_fact "intel_gpu_present"
     fi
     if lspci 2>/dev/null | rg -qi "amd|ati"; then
       add_hardware_tag "amd_gpu"
+      add_fact "amd_gpu_present"
     fi
     if lspci 2>/dev/null | rg -qi "nvidia"; then
       add_hardware_tag "nvidia_gpu"
+      add_fact "nvidia_gpu_present"
     fi
   fi
 
@@ -287,6 +327,66 @@ detect_hardware_tags() {
       contains "${tag}" "${SKIPPED_HARDWARE_TAGS[@]}" || filtered+=("${tag}")
     done
     DETECTED_HARDWARE_TAGS=("${filtered[@]}")
+  fi
+
+  build_probe_recommendations
+}
+
+build_probe_recommendations() {
+  if contains "touchscreen" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_probe_note "touchscreen detected"
+    add_probe_recommendation "Review touchscreen toggle integration after install: niri Waybar module or bind/unbind helper may be useful."
+  fi
+
+  if contains "laptop" "${DETECTED_HARDWARE_TAGS[@]:-}" && ! contains "battery" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_probe_note "laptop-like input/display detected without battery fact"
+    add_probe_recommendation "Verify power-management choice manually; battery device was not detected during probe."
+  fi
+
+  if contains "nvidia_gpu" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_probe_recommendation "Add an NVIDIA-specific package group before using this setup on proprietary NVIDIA laptops."
+  fi
+
+  if contains "intel_gpu" "${DETECTED_HARDWARE_TAGS[@]:-}" && contains "amd_gpu" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_probe_note "multiple GPU vendors detected"
+    add_probe_recommendation "Review hybrid-graphics needs; current manifest may install both Intel and AMD userland."
+  fi
+
+  if contains "backlight" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_probe_recommendation "Keep brightness wrappers enabled; this machine exposes a backlight device."
+  fi
+
+  if contains "wifi" "${DETECTED_HARDWARE_TAGS[@]:-}" || contains "bluetooth" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_probe_recommendation "Check whether NetworkManager and Bluetooth services should be enabled as part of first boot on the new machine."
+  fi
+}
+
+print_probe_summary() {
+  log
+  log "Hardware tags: $(join_by ', ' "${DETECTED_HARDWARE_TAGS[@]}")"
+
+  if [[ "${#HARDWARE_FACTS[@]}" -gt 0 ]]; then
+    log "Hardware facts:"
+    local fact
+    for fact in "${HARDWARE_FACTS[@]}"; do
+      log "  ${fact}"
+    done
+  fi
+
+  if [[ "${#HARDWARE_PROBE_NOTES[@]}" -gt 0 ]]; then
+    log "Probe notes:"
+    local note
+    for note in "${HARDWARE_PROBE_NOTES[@]}"; do
+      log "  ${note}"
+    done
+  fi
+
+  if [[ "${#HARDWARE_PROBE_RECOMMENDATIONS[@]}" -gt 0 ]]; then
+    log "Probe recommendations:"
+    local recommendation
+    for recommendation in "${HARDWARE_PROBE_RECOMMENDATIONS[@]}"; do
+      log "  ${recommendation}"
+    done
   fi
 }
 
@@ -533,6 +633,7 @@ install_packages_if_needed() {
 run_install() {
   local row name src dest mode desc
   install_packages_if_needed
+  print_probe_summary
 
   if [[ "${#ACTIVE_PACKAGE_GROUP_ROWS[@]}" -gt 0 ]]; then
     log
@@ -584,9 +685,15 @@ detect_hardware_tags
 collect_components
 collect_packages
 
+if (( PROBE_ONLY )); then
+  print_probe_summary
+  exit 0
+fi
+
 case "${ACTION}" in
   check)
     run_relevance_check
+    print_probe_summary
     ;;
   install)
     run_relevance_check

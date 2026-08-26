@@ -51,6 +51,12 @@ Hardware-aware install for another laptop:
 ./bootstrap.sh --action install --dry-run --hardware-profile laptop
 ```
 
+Show only hardware probe results before install:
+
+```bash
+./bootstrap.sh --probe-only
+```
+
 Override autodetection when needed:
 
 ```bash
