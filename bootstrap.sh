@@ -20,6 +20,9 @@ Options:
   --skip-package-group NAME
   --extra-packages "pkg1 pkg2"
   --packages auto|always|never
+  --hardware-tag TAG
+  --skip-hardware-tag TAG
+  --hardware-profile auto|desktop|laptop
   --dry-run
   --yes
   --help
@@ -29,6 +32,7 @@ Examples:
   ./bootstrap.sh --action install --dry-run
   ./bootstrap.sh --repo https://example.com/dotfiles.git --action check
   ./bootstrap.sh --component niri --component rofi --package-group optional-gui
+  ./bootstrap.sh --hardware-profile laptop --hardware-tag amd_gpu
 EOF
 }
 
@@ -40,10 +44,13 @@ PACKAGE_MODE="auto"
 DRY_RUN=0
 ASSUME_YES=0
 EXTRA_PACKAGES=()
+EXTRA_HARDWARE_TAGS=()
+SKIPPED_HARDWARE_TAGS=()
 SELECTED_COMPONENTS=()
 SKIPPED_COMPONENTS=()
 SELECTED_PACKAGE_GROUPS=()
 SKIPPED_PACKAGE_GROUPS=()
+HARDWARE_PROFILE="auto"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -86,6 +93,18 @@ while [[ $# -gt 0 ]]; do
       ;;
     --packages)
       PACKAGE_MODE="${2:?missing package mode}"
+      shift 2
+      ;;
+    --hardware-tag)
+      EXTRA_HARDWARE_TAGS+=("${2:?missing hardware tag}")
+      shift 2
+      ;;
+    --skip-hardware-tag)
+      SKIPPED_HARDWARE_TAGS+=("${2:?missing hardware tag}")
+      shift 2
+      ;;
+    --hardware-profile)
+      HARDWARE_PROFILE="${2:?missing hardware profile}"
       shift 2
       ;;
     --dry-run)
@@ -193,6 +212,101 @@ validate_manifest() {
   [[ "${#DOTBOOTSTRAP_COMPONENTS[@]}" -gt 0 ]] || die "Manifest has no components"
 }
 
+add_hardware_tag() {
+  local tag="$1"
+  [[ -n "${tag}" ]] || return 0
+  contains "${tag}" "${DETECTED_HARDWARE_TAGS[@]:-}" || DETECTED_HARDWARE_TAGS+=("${tag}")
+}
+
+detect_hardware_tags() {
+  DETECTED_HARDWARE_TAGS=()
+
+  case "${HARDWARE_PROFILE}" in
+    laptop)
+      add_hardware_tag "laptop"
+      add_hardware_tag "battery"
+      ;;
+    desktop)
+      add_hardware_tag "desktop"
+      ;;
+    auto)
+      ;;
+    *)
+      die "Unsupported hardware profile: ${HARDWARE_PROFILE}"
+      ;;
+  esac
+
+  if [[ "${HARDWARE_PROFILE}" == "auto" ]]; then
+    if compgen -G "/sys/class/power_supply/BAT*" >/dev/null; then
+      add_hardware_tag "battery"
+      add_hardware_tag "laptop"
+    fi
+    if compgen -G "/sys/class/backlight/*" >/dev/null; then
+      add_hardware_tag "backlight"
+    fi
+    if compgen -G "/sys/class/net/wl*" >/dev/null; then
+      add_hardware_tag "wifi"
+    fi
+    if [[ -d /sys/class/bluetooth ]] || compgen -G "/sys/class/rfkill/rfkill*" >/dev/null; then
+      add_hardware_tag "bluetooth"
+    fi
+    if rg -qi "touchpad|trackpoint" /proc/bus/input/devices 2>/dev/null; then
+      add_hardware_tag "touchpad"
+      add_hardware_tag "laptop"
+    fi
+    if compgen -G "/sys/class/drm/card*-eDP-*" >/dev/null; then
+      add_hardware_tag "internal_display"
+      add_hardware_tag "laptop"
+    fi
+  fi
+
+  if lspci 2>/dev/null | rg -qi "vga|3d|display"; then
+    if lspci 2>/dev/null | rg -qi "intel"; then
+      add_hardware_tag "intel_gpu"
+    fi
+    if lspci 2>/dev/null | rg -qi "amd|ati"; then
+      add_hardware_tag "amd_gpu"
+    fi
+    if lspci 2>/dev/null | rg -qi "nvidia"; then
+      add_hardware_tag "nvidia_gpu"
+    fi
+  fi
+
+  if ! contains "laptop" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
+    add_hardware_tag "desktop"
+  fi
+
+  local tag
+  for tag in "${EXTRA_HARDWARE_TAGS[@]}"; do
+    add_hardware_tag "${tag}"
+  done
+
+  if [[ "${#SKIPPED_HARDWARE_TAGS[@]}" -gt 0 ]]; then
+    local filtered=()
+    for tag in "${DETECTED_HARDWARE_TAGS[@]}"; do
+      contains "${tag}" "${SKIPPED_HARDWARE_TAGS[@]}" || filtered+=("${tag}")
+    done
+    DETECTED_HARDWARE_TAGS=("${filtered[@]}")
+  fi
+}
+
+package_group_matches_hardware() {
+  local selector="$1"
+  case "${selector}" in
+    ""|"always")
+      return 0
+      ;;
+  esac
+
+  local required
+  read -r -a required <<< "${selector}"
+  local tag
+  for tag in "${required[@]}"; do
+    contains "${tag}" "${DETECTED_HARDWARE_TAGS[@]:-}" && return 0
+  done
+  return 1
+}
+
 detect_package_manager() {
   if command -v pacman >/dev/null 2>&1; then
     PACKAGE_MANAGER="pacman"
@@ -258,10 +372,10 @@ collect_components() {
 
 collect_packages() {
   ACTIVE_PACKAGE_GROUP_ROWS=()
-  local row name packages desc
+  local row name selector packages desc
   for row in "${DOTBOOTSTRAP_PACKAGE_GROUPS[@]:-}"; do
-    IFS='|' read -r name packages desc <<< "${row}"
-    [[ -n "${name}" && -n "${packages}" ]] || die "Bad package group row: ${row}"
+    IFS='|' read -r name selector packages desc <<< "${row}"
+    [[ -n "${name}" && -n "${selector}" && -n "${packages}" ]] || die "Bad package group row: ${row}"
 
     if contains "${name}" "${SKIPPED_PACKAGE_GROUPS[@]}"; then
       continue
@@ -271,7 +385,7 @@ collect_packages() {
       contains "${name}" "${SELECTED_PACKAGE_GROUPS[@]}" || continue
     else
       if contains "${name}" "${DOTBOOTSTRAP_DEFAULT_PACKAGE_GROUPS[@]:-}"; then
-        :
+        package_group_matches_hardware "${selector}" || continue
       else
         continue
       fi
@@ -295,6 +409,7 @@ run_relevance_check() {
   log "Manifest: ${ACTIVE_MANIFEST_PATH}"
   log "Repo: ${REPO_DIR}"
   log "Target home: ${TARGET_HOME}"
+  log "Hardware tags: $(join_by ', ' "${DETECTED_HARDWARE_TAGS[@]}")"
   log
   log "Component validation:"
   for row in "${ACTIVE_COMPONENT_ROWS[@]}"; do
@@ -379,9 +494,9 @@ install_packages_if_needed() {
   fi
 
   local packages=()
-  local row name package_list desc pkg
+  local row name selector package_list desc pkg
   for row in "${ACTIVE_PACKAGE_GROUP_ROWS[@]}"; do
-    IFS='|' read -r name package_list desc <<< "${row}"
+    IFS='|' read -r name selector package_list desc <<< "${row}"
     read -r -a parsed <<< "${package_list}"
     for pkg in "${parsed[@]}"; do
       contains "${pkg}" "${packages[@]}" || packages+=("${pkg}")
@@ -419,6 +534,16 @@ run_install() {
   local row name src dest mode desc
   install_packages_if_needed
 
+  if [[ "${#ACTIVE_PACKAGE_GROUP_ROWS[@]}" -gt 0 ]]; then
+    log
+    log "Active package groups:"
+    local package_row package_name package_selector package_list package_desc
+    for package_row in "${ACTIVE_PACKAGE_GROUP_ROWS[@]}"; do
+      IFS='|' read -r package_name package_selector package_list package_desc <<< "${package_row}"
+      log "  ${package_name} [${package_selector}]"
+    done
+  fi
+
   log
   log "Copy plan:"
   for row in "${ACTIVE_COMPONENT_ROWS[@]}"; do
@@ -447,14 +572,15 @@ list_manifest() {
   log
   log "Package groups:"
   for row in "${DOTBOOTSTRAP_PACKAGE_GROUPS[@]:-}"; do
-    IFS='|' read -r name packages desc <<< "${row}"
-    log "  ${name} :: ${packages} :: ${desc}"
+    IFS='|' read -r name selector packages desc <<< "${row}"
+    log "  ${name} [${selector}] :: ${packages} :: ${desc}"
   done
 }
 
 resolve_repo "${REPO_INPUT}"
 load_manifest "${REPO_DIR}"
 validate_manifest
+detect_hardware_tags
 collect_components
 collect_packages
 

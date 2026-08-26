@@ -51,14 +51,19 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
 )
 
 DOTBOOTSTRAP_PACKAGE_GROUPS=(
-  "base|git curl unzip|Base bootstrap tools"
-  "wayland-core|foot alacritty wl-clipboard xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Wayland userland basics"
-  "niri-desktop|niri waybar mako rofi swayidle swaylock wlogout playerctl brightnessctl|Niri desktop stack"
-  "shell|fish btop|Shell and terminal helpers"
-  "editors|neovim micro|Editors"
-  "file-tools|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
-  "theme|qt5ct qt6ct nwg-look|Theme helpers"
-  "optional-gui|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
+  "base|always|git curl unzip|Base bootstrap tools"
+  "wayland-core|always|foot alacritty wl-clipboard xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Wayland userland basics"
+  "niri-desktop|always|niri waybar mako rofi swayidle swaylock wlogout playerctl|Niri desktop stack"
+  "shell|always|fish btop|Shell and terminal helpers"
+  "editors|always|neovim micro|Editors"
+  "file-tools|always|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
+  "theme|always|qt5ct qt6ct nwg-look|Theme helpers"
+  "laptop-backlight|backlight|brightnessctl light|Brightness control tools for laptops"
+  "wireless|wifi bluetooth|networkmanager bluez bluez-utils|Wireless stack for laptops"
+  "laptop-ux|laptop battery|tlp|Laptop power management"
+  "intel-gpu-tools|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
+  "amd-gpu-tools|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
+  "optional-gui|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
 )
 
 DOTBOOTSTRAP_DEFAULT_PACKAGE_GROUPS=(
@@ -69,6 +74,11 @@ DOTBOOTSTRAP_DEFAULT_PACKAGE_GROUPS=(
   "editors"
   "file-tools"
   "theme"
+  "laptop-backlight"
+  "wireless"
+  "laptop-ux"
+  "intel-gpu-tools"
+  "amd-gpu-tools"
 )
 
 DOTBOOTSTRAP_OPTIONAL_PACKAGE_GROUPS=(

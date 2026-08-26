@@ -45,6 +45,18 @@ Dry-run a full install:
 ./bootstrap.sh --action install --dry-run
 ```
 
+Hardware-aware install for another laptop:
+
+```bash
+./bootstrap.sh --action install --dry-run --hardware-profile laptop
+```
+
+Override autodetection when needed:
+
+```bash
+./bootstrap.sh --action install --hardware-tag amd_gpu --skip-hardware-tag intel_gpu
+```
+
 Install selected components and an extra package group:
 
 ```bash
