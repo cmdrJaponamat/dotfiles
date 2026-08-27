@@ -103,3 +103,10 @@ Use another compatible repo:
 - Qt icons: `Papirus-Dark`
 - Qt theme engine: `Kvantum` with `Gruvbox-Dark-Brown`
 - Custom surfaces: `waybar`, `rofi`, `mako`, `swaylock` aligned to the same palette
+
+## Session Menu
+
+- Power menu: `~/.local/bin/power-menu`
+- Logout helper for `niri`: `~/.local/bin/session-logout`
+- Default hotkey in `niri`: `Mod+Shift+P`
+- Monitor power-off moved to: `Mod+Ctrl+P`

@@ -12,7 +12,7 @@
 }
 {
     "label" : "logout",
-    "action" : "hyprctl dispatch exit 1",
+    "action" : "~/.local/bin/session-logout",
     "text" : "Logout",
     "keybind" : "e"
 }
@@ -24,7 +24,7 @@
 }
 {
     "label" : "suspend",
-    "action" : "systemctl suspend",
+    "action" : "playerctl pause; systemctl suspend",
     "text" : "Suspend",
     "keybind" : "u"
 }

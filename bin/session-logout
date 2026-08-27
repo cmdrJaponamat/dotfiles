@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if pgrep -x niri >/dev/null 2>&1; then
+  exec niri msg action quit
+fi
+
+if command -v loginctl >/dev/null 2>&1; then
+  session_id="$(loginctl | awk '/tty|wayland|x11/ && $3 == ENVIRON["USER"] {print $1; exit}')"
+  if [[ -n "${session_id:-}" ]]; then
+    exec loginctl terminate-session "${session_id}"
+  fi
+fi
+
+echo "Could not determine how to terminate the current graphical session." >&2
+exit 1
