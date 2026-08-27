@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-layout="${XDG_CONFIG_HOME:-$HOME/.config}/wlogout/layout"
-style="${XDG_CONFIG_HOME:-$HOME/.config}/wlogout/style.css"
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+if command -v wleave >/dev/null 2>&1; then
+  exec wleave --layout "${config_home}/wleave/layout.json"
+fi
+
+layout="${config_home}/wlogout/layout"
+style="${config_home}/wlogout/style.css"
 exec wlogout --layout "${layout}" --css "${style}" --protocol layer-shell

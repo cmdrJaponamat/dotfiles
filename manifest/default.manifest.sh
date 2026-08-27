@@ -23,6 +23,7 @@ DOTBOOTSTRAP_COMPONENTS=(
   "swayidle|swayidle|.config/swayidle|optional|swayidle config"
   "swaylock|swaylock|.config/swaylock|optional|swaylock config"
   "wlogout|wlogout|.config/wlogout|optional|wlogout config"
+  "wleave|wleave|.config/wleave|optional|wleave config"
   "zathura|zathura|.config/zathura|optional|Zathura config"
   "mimeapps|mimeapps.list|.config/mimeapps.list|optional|MIME associations"
   "user-dirs|user-dirs.dirs|.config/user-dirs.dirs|optional|XDG user dirs"
@@ -46,6 +47,7 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
   "swayidle"
   "swaylock"
   "wlogout"
+  "wleave"
   "zathura"
   "mimeapps"
   "user-dirs"
@@ -68,6 +70,8 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "intel-gpu-tools|minimal|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
+  "session-menu|core|always|wlogout|Fallback session menu"
+  "session-menu-next|full|always|wleave-git|Preferred GTK4 session menu from AUR"
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(

@@ -1,0 +1,59 @@
+{
+  "css": "$HOME/.config/wleave/style.css",
+  "protocol": "layer-shell",
+  "close-on-lost-focus": true,
+  "show-keybinds": true,
+  "buttons-per-row": "3",
+  "margin": "14%",
+  "column-spacing": "18px",
+  "row-spacing": "18px",
+  "button-aspect-ratio": "5/4",
+  "delay-command-ms": 120,
+  "button-defaults": {
+    "keybind-label": "%S"
+  },
+  "buttons": [
+    {
+      "label": "lock",
+      "action": "swaylock",
+      "text": "Lock",
+      "keybind": "l",
+      "icon": "$HOME/.config/wleave/icons/lock.svg"
+    },
+    {
+      "label": "logout",
+      "action": "$HOME/.local/bin/session-logout",
+      "text": "Logout",
+      "keybind": "e",
+      "icon": "$HOME/.config/wleave/icons/logout.svg"
+    },
+    {
+      "label": "suspend",
+      "action": "playerctl pause; systemctl suspend",
+      "text": "Suspend",
+      "keybind": "u",
+      "icon": "$HOME/.config/wleave/icons/suspend.svg"
+    },
+    {
+      "label": "hibernate",
+      "action": "systemctl hibernate",
+      "text": "Hibernate",
+      "keybind": "h",
+      "icon": "$HOME/.config/wleave/icons/hibernate.svg"
+    },
+    {
+      "label": "shutdown",
+      "action": "systemctl poweroff",
+      "text": "Shutdown",
+      "keybind": "s",
+      "icon": "$HOME/.config/wleave/icons/shutdown.svg"
+    },
+    {
+      "label": "reboot",
+      "action": "systemctl reboot",
+      "text": "Reboot",
+      "keybind": "r",
+      "icon": "$HOME/.config/wleave/icons/reboot.svg"
+    }
+  ]
+}

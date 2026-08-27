@@ -1,0 +1,83 @@
+window {
+  background-color: rgba(29, 32, 33, 0.86);
+}
+
+grid {
+  margin: 0;
+}
+
+button {
+  min-width: 320px;
+  min-height: 250px;
+  padding: 24px;
+  border-radius: 24px;
+  border: 2px solid #3c3836;
+  background-color: #282828;
+  color: #ebdbb2;
+  box-shadow: 0 0 0 1px rgba(80, 73, 69, 0.20);
+  transition: all 160ms ease-out;
+}
+
+button:hover,
+button:focus {
+  background-color: #32302f;
+  color: #fbf1c7;
+  border-color: #665c54;
+}
+
+button#lock:hover,
+button#lock:focus {
+  border-color: #83a598;
+}
+
+button#logout:hover,
+button#logout:focus {
+  border-color: #fabd2f;
+}
+
+button#suspend:hover,
+button#suspend:focus {
+  border-color: #8ec07c;
+}
+
+button#hibernate:hover,
+button#hibernate:focus {
+  border-color: #b8bb26;
+}
+
+button#shutdown:hover,
+button#shutdown:focus {
+  border-color: #fb4934;
+}
+
+button#reboot:hover,
+button#reboot:focus {
+  border-color: #fe8019;
+}
+
+image {
+  -gtk-icon-size: 92px;
+  margin-bottom: 18px;
+}
+
+button label.action-name {
+  font-family: "JetBrains Mono Nerd Font", "JetBrains Mono";
+  font-size: 28px;
+  font-weight: 700;
+  color: inherit;
+  letter-spacing: 0.04em;
+}
+
+button label.keybind {
+  font-family: "JetBrains Mono Nerd Font", "JetBrains Mono";
+  font-size: 16px;
+  color: #a89984;
+  opacity: 0.9;
+  margin-top: 10px;
+}
+
+button:hover label.keybind,
+button:focus label.keybind {
+  color: #d5c4a1;
+  opacity: 1;
+}

@@ -20,6 +20,7 @@ Personal dotfiles for Arch Linux Wayland setup.
 - rofi
 - swayidle
 - swaylock
+- wleave
 - wlogout
 - zathura
 - mimeapps.list
@@ -107,6 +108,8 @@ Use another compatible repo:
 ## Session Menu
 
 - Power menu: `~/.local/bin/power-menu`
+  - prefers `wleave`
+  - falls back to `wlogout`
 - Logout helper for `niri`: `~/.local/bin/session-logout`
 - Default hotkey in `niri`: `Mod+Shift+P`
 - Monitor power-off moved to: `Mod+Ctrl+P`

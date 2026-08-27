@@ -25,83 +25,84 @@ button {
 }
 
 button:focus {
+  color: #ebdbb2;
   background-color: #3c3836;
-  border-color: #83a598;
+  border-color: #fabd2f;
   background-size: 22%;
 }
 
 button:hover#lock {
+  color: #ebdbb2;
   background-color: #3c3836;
   border-color: #83a598;
 }
 
 button:hover#logout {
+  color: #ebdbb2;
   background-color: #3c3836;
-  border-color: #d3869b;
+  border-color: #fabd2f;
 }
 
 button:hover#suspend {
+  color: #ebdbb2;
   background-color: #3c3836;
   border-color: #8ec07c;
 }
 
 button:hover#hibernate {
+  color: #ebdbb2;
   background-color: #3c3836;
   border-color: #b8bb26;
 }
 
 button:hover#shutdown {
+  color: #ebdbb2;
   background-color: #3c3836;
   border-color: #fb4934;
 }
 
 button:hover#reboot {
+  color: #ebdbb2;
   background-color: #3c3836;
   border-color: #fe8019;
 }
 
 #lock {
   background-image: image(
-    url('/usr/share/wlogout/icons/lock.png'),
-    url('/usr/local/share/wlogout/icons/lock.png')
+    url('icons/lock.svg')
   );
   border-top-left-radius: 28px;
 }
 
 #logout {
   background-image: image(
-    url('/usr/share/wlogout/icons/logout.png'),
-    url('/usr/local/share/wlogout/icons/logout.png')
+    url('icons/logout.svg')
   );
 }
 
 #shutdown {
   background-image: image(
-    url('/usr/share/wlogout/icons/shutdown.png'),
-    url('/usr/local/share/wlogout/icons/shutdown.png')
+    url('icons/shutdown.svg')
   );
 }
 
 #reboot {
   background-image: image(
-    url('/usr/share/wlogout/icons/reboot.png'),
-    url('/usr/local/share/wlogout/icons/reboot.png')
+    url('icons/reboot.svg')
   );
   border-bottom-right-radius: 28px;
 }
 
 #suspend {
   background-image: image(
-    url('/usr/share/wlogout/icons/suspend.png'),
-    url('/usr/local/share/wlogout/icons/suspend.png')
+    url('icons/suspend.svg')
   );
   border-top-right-radius: 28px;
 }
 
 #hibernate {
   background-image: image(
-    url('/usr/share/wlogout/icons/hibernate.png'),
-    url('/usr/local/share/wlogout/icons/hibernate.png')
+    url('icons/hibernate.svg')
   );
   border-bottom-left-radius: 28px;
 }
