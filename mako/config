@@ -1,16 +1,16 @@
 layer=top
 anchor=top-center
-font=mononoki Nerd Font 14
-background-color=#3c3836
+font=JetBrains Mono Nerd Font 12
+background-color=#282828
 text-color=#ebdbb2
-width=400
-margin=30,30,30
-padding=10
+width=420
+margin=24,24,24
+padding=14
 border-size=2
-border-color=#ebdbb2
-progress-color=over #262626
-border-radius=16
-default-timeout=2000
+border-color=#504945
+progress-color=over #3c3836
+border-radius=14
+default-timeout=3500
 group-by=summary
 
 [grouped]

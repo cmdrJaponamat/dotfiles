@@ -67,9 +67,9 @@
 window#waybar {
     background: @bg0;
     color: @fg;
-    font-family: "Cantarell", "Ubuntu Nerd Font";/*Font Awesome 5 Pro*/
-    font-size: 9pt;
-    font-weight: bold;
+    font-family: "JetBrains Mono Nerd Font", "JetBrains Mono", "Cantarell";
+    font-size: 10pt;
+    font-weight: 700;
 }
 
 /* Each module */

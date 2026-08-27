@@ -8,6 +8,7 @@ Personal dotfiles for Arch Linux Wayland setup.
 - fish
 - gtk-3.0
 - gtk-4.0
+- Kvantum
 - hypr
 - mako
 - micro
@@ -94,3 +95,11 @@ Use another compatible repo:
 ```
 
 `install.sh` remains as a compatibility wrapper around `bootstrap.sh`.
+
+## Current Theme Direction
+
+- Base look: `gruvbox dark`
+- GTK: `Gruvbox-Dark-BL`
+- Qt icons: `Papirus-Dark`
+- Qt theme engine: `Kvantum` with `Gruvbox-Dark-Brown`
+- Custom surfaces: `waybar`, `rofi`, `mako`, `swaylock` aligned to the same palette
