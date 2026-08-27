@@ -68,7 +68,7 @@ Full install with optional apps:
 Preview full install including system login theme:
 
 ```bash
-./bootstrap.sh --action install --dry-run --package-preset full --component sddm-theme --component sddm-config
+./bootstrap.sh --action install --dry-run --package-preset full --component sddm-theme --component sddm-config --component sddm-greeter
 ```
 
 Hardware-aware install for another laptop:
@@ -110,7 +110,7 @@ Use another compatible repo:
 - Qt icons: `Papirus-Dark`
 - Qt theme engine: `Kvantum` with `Gruvbox-Dark-Brown`
 - Custom surfaces: `waybar`, `rofi`, `mako`, `swaylock` aligned to the same palette
-- Display manager: `SDDM` theme `codex-gruvbox`
+- Display manager: `SDDM` theme `SilentSDDM` with `gruvbox.conf`
 
 ## Session Menu
 
@@ -127,11 +127,18 @@ Use another compatible repo:
 Dry-run only:
 
 ```bash
-./bootstrap.sh --action install --dry-run --component sddm-theme --component sddm-config --package-group display-manager
+./bootstrap.sh --action install --dry-run --component sddm-theme --component sddm-config --component sddm-greeter --package-group display-manager
 ```
 
 Real install:
 
 ```bash
-sudo ./bootstrap.sh --action install --component sddm-theme --component sddm-config --package-group display-manager --packages never --yes --target-home /
+sudo ./bootstrap.sh --action install --component sddm-theme --component sddm-config --component sddm-greeter --package-group display-manager --packages never --yes --target-home /
+```
+
+Optional theme preview before restarting `SDDM`:
+
+```bash
+cd /usr/share/sddm/themes/silent
+sudo ./test.sh
 ```
