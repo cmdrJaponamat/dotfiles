@@ -51,39 +51,30 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
 )
 
 DOTBOOTSTRAP_PACKAGE_GROUPS=(
-  "base|always|git curl unzip|Base bootstrap tools"
-  "wayland-core|always|foot alacritty wl-clipboard xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Wayland userland basics"
-  "niri-desktop|always|niri waybar mako rofi swayidle swaylock wlogout playerctl|Niri desktop stack"
-  "shell|always|fish btop|Shell and terminal helpers"
-  "editors|always|neovim micro|Editors"
-  "file-tools|always|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
-  "theme|always|qt5ct qt6ct nwg-look|Theme helpers"
-  "laptop-backlight|backlight|brightnessctl light|Brightness control tools for laptops"
-  "wireless|wifi bluetooth|networkmanager bluez bluez-utils|Wireless stack for laptops"
-  "laptop-ux|laptop battery|tlp|Laptop power management"
-  "intel-gpu-tools|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
-  "amd-gpu-tools|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
-  "optional-gui|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
+  "bootstrap-tools|minimal|always|git curl unzip|Base bootstrap tools"
+  "session-base|minimal|always|foot alacritty wl-clipboard xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Minimal Wayland session base"
+  "niri-session|core|always|niri waybar mako rofi playerctl|Core Niri desktop session"
+  "lockscreen|core|always|swayidle swaylock wlogout|Session lock and exit tools"
+  "shell-tools|core|always|fish btop|Shell and terminal helpers"
+  "editor-base|core|always|neovim|Primary editor"
+  "extra-editors|full|always|micro|Secondary editor"
+  "file-tools|core|always|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
+  "theme-tools|full|always|qt5ct qt6ct nwg-look|Theme helpers"
+  "laptop-backlight|minimal|backlight|brightnessctl light|Brightness control tools for laptops"
+  "wireless|minimal|wifi bluetooth|networkmanager bluez bluez-utils|Wireless stack for laptops"
+  "laptop-power|core|laptop battery|tlp|Laptop power management"
+  "intel-gpu-tools|minimal|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
+  "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
+  "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
 )
 
-DOTBOOTSTRAP_DEFAULT_PACKAGE_GROUPS=(
-  "base"
-  "wayland-core"
-  "niri-desktop"
-  "shell"
-  "editors"
-  "file-tools"
-  "theme"
-  "laptop-backlight"
-  "wireless"
-  "laptop-ux"
-  "intel-gpu-tools"
-  "amd-gpu-tools"
+DOTBOOTSTRAP_PACKAGE_PRESETS=(
+  "minimal|bootstrap-tools session-base laptop-backlight wireless intel-gpu-tools amd-gpu-tools|Minimal bootable user environment"
+  "core|minimal niri-session lockscreen shell-tools editor-base file-tools laptop-power|Daily-driver desktop setup"
+  "full|core extra-editors theme-tools optional-gui|Full featured setup with optional apps"
 )
 
-DOTBOOTSTRAP_OPTIONAL_PACKAGE_GROUPS=(
-  "optional-gui"
-)
+DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET="core"
 
 DOTBOOTSTRAP_RELEVANCE_WARN_PATTERNS=(
   '/home/'

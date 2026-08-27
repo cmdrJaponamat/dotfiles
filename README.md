@@ -45,6 +45,24 @@ Dry-run a full install:
 ./bootstrap.sh --action install --dry-run
 ```
 
+Minimal install:
+
+```bash
+./bootstrap.sh --action install --dry-run --package-preset minimal
+```
+
+Daily-driver install:
+
+```bash
+./bootstrap.sh --action install --dry-run --package-preset core
+```
+
+Full install with optional apps:
+
+```bash
+./bootstrap.sh --action install --dry-run --package-preset full
+```
+
 Hardware-aware install for another laptop:
 
 ```bash

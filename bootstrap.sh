@@ -18,6 +18,7 @@ Options:
   --skip-component NAME
   --package-group NAME
   --skip-package-group NAME
+  --package-preset minimal|core|full
   --extra-packages "pkg1 pkg2"
   --packages auto|always|never
   --hardware-tag TAG
@@ -51,6 +52,7 @@ SELECTED_COMPONENTS=()
 SKIPPED_COMPONENTS=()
 SELECTED_PACKAGE_GROUPS=()
 SKIPPED_PACKAGE_GROUPS=()
+PACKAGE_PRESET=""
 HARDWARE_PROFILE="auto"
 PROBE_ONLY=0
 
@@ -86,6 +88,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-package-group)
       SKIPPED_PACKAGE_GROUPS+=("${2:?missing package group}")
+      shift 2
+      ;;
+    --package-preset)
+      PACKAGE_PRESET="${2:?missing package preset}"
       shift 2
       ;;
     --extra-packages)
@@ -407,6 +413,55 @@ package_group_matches_hardware() {
   return 1
 }
 
+resolve_package_preset() {
+  local preset_name="${PACKAGE_PRESET:-${DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET:-}}"
+  [[ -n "${preset_name}" ]] || return 0
+
+  local unresolved=("${preset_name}")
+  ACTIVE_PACKAGE_PRESET_GROUPS=()
+  local seen=()
+  local current row name items desc item found
+
+  while [[ "${#unresolved[@]}" -gt 0 ]]; do
+    current="${unresolved[0]}"
+    unresolved=("${unresolved[@]:1}")
+    contains "${current}" "${seen[@]}" && continue
+    seen+=("${current}")
+
+    found=0
+    for row in "${DOTBOOTSTRAP_PACKAGE_PRESETS[@]:-}"; do
+      IFS='|' read -r name items desc <<< "${row}"
+      if [[ "${name}" == "${current}" ]]; then
+        found=1
+        read -r -a parsed_items <<< "${items}"
+        for item in "${parsed_items[@]}"; do
+          if contains "${item}" "${seen[@]}"; then
+            continue
+          fi
+          if preset_exists "${item}"; then
+            unresolved+=("${item}")
+          else
+            contains "${item}" "${ACTIVE_PACKAGE_PRESET_GROUPS[@]:-}" || ACTIVE_PACKAGE_PRESET_GROUPS+=("${item}")
+          fi
+        done
+        break
+      fi
+    done
+
+    (( found == 1 )) || die "Unknown package preset: ${current}"
+  done
+}
+
+preset_exists() {
+  local wanted="$1"
+  local row name items desc
+  for row in "${DOTBOOTSTRAP_PACKAGE_PRESETS[@]:-}"; do
+    IFS='|' read -r name items desc <<< "${row}"
+    [[ "${name}" == "${wanted}" ]] && return 0
+  done
+  return 1
+}
+
 detect_package_manager() {
   if command -v pacman >/dev/null 2>&1; then
     PACKAGE_MANAGER="pacman"
@@ -472,10 +527,10 @@ collect_components() {
 
 collect_packages() {
   ACTIVE_PACKAGE_GROUP_ROWS=()
-  local row name selector packages desc
+  local row name tier selector packages desc
   for row in "${DOTBOOTSTRAP_PACKAGE_GROUPS[@]:-}"; do
-    IFS='|' read -r name selector packages desc <<< "${row}"
-    [[ -n "${name}" && -n "${selector}" && -n "${packages}" ]] || die "Bad package group row: ${row}"
+    IFS='|' read -r name tier selector packages desc <<< "${row}"
+    [[ -n "${name}" && -n "${tier}" && -n "${selector}" && -n "${packages}" ]] || die "Bad package group row: ${row}"
 
     if contains "${name}" "${SKIPPED_PACKAGE_GROUPS[@]}"; then
       continue
@@ -484,7 +539,7 @@ collect_packages() {
     if [[ "${#SELECTED_PACKAGE_GROUPS[@]}" -gt 0 ]]; then
       contains "${name}" "${SELECTED_PACKAGE_GROUPS[@]}" || continue
     else
-      if contains "${name}" "${DOTBOOTSTRAP_DEFAULT_PACKAGE_GROUPS[@]:-}"; then
+      if contains "${name}" "${ACTIVE_PACKAGE_PRESET_GROUPS[@]:-}"; then
         package_group_matches_hardware "${selector}" || continue
       else
         continue
@@ -594,9 +649,9 @@ install_packages_if_needed() {
   fi
 
   local packages=()
-  local row name selector package_list desc pkg
+  local row name tier selector package_list desc pkg
   for row in "${ACTIVE_PACKAGE_GROUP_ROWS[@]}"; do
-    IFS='|' read -r name selector package_list desc <<< "${row}"
+    IFS='|' read -r name tier selector package_list desc <<< "${row}"
     read -r -a parsed <<< "${package_list}"
     for pkg in "${parsed[@]}"; do
       contains "${pkg}" "${packages[@]}" || packages+=("${pkg}")
@@ -638,10 +693,10 @@ run_install() {
   if [[ "${#ACTIVE_PACKAGE_GROUP_ROWS[@]}" -gt 0 ]]; then
     log
     log "Active package groups:"
-    local package_row package_name package_selector package_list package_desc
+    local package_row package_name package_tier package_selector package_list package_desc
     for package_row in "${ACTIVE_PACKAGE_GROUP_ROWS[@]}"; do
-      IFS='|' read -r package_name package_selector package_list package_desc <<< "${package_row}"
-      log "  ${package_name} [${package_selector}]"
+      IFS='|' read -r package_name package_tier package_selector package_list package_desc <<< "${package_row}"
+      log "  ${package_name} [${package_tier}; ${package_selector}]"
     done
   fi
 
@@ -673,8 +728,14 @@ list_manifest() {
   log
   log "Package groups:"
   for row in "${DOTBOOTSTRAP_PACKAGE_GROUPS[@]:-}"; do
-    IFS='|' read -r name selector packages desc <<< "${row}"
-    log "  ${name} [${selector}] :: ${packages} :: ${desc}"
+    IFS='|' read -r name tier selector packages desc <<< "${row}"
+    log "  ${name} [${tier}; ${selector}] :: ${packages} :: ${desc}"
+  done
+  log
+  log "Package presets:"
+  for row in "${DOTBOOTSTRAP_PACKAGE_PRESETS[@]:-}"; do
+    IFS='|' read -r name items desc <<< "${row}"
+    log "  ${name} :: ${items} :: ${desc}"
   done
 }
 
@@ -682,6 +743,7 @@ resolve_repo "${REPO_INPUT}"
 load_manifest "${REPO_DIR}"
 validate_manifest
 detect_hardware_tags
+resolve_package_preset
 collect_components
 collect_packages
 
