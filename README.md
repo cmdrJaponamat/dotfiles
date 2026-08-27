@@ -65,6 +65,12 @@ Full install with optional apps:
 ./bootstrap.sh --action install --dry-run --package-preset full
 ```
 
+Preview full install including system login theme:
+
+```bash
+./bootstrap.sh --action install --dry-run --package-preset full --component sddm-theme --component sddm-config
+```
+
 Hardware-aware install for another laptop:
 
 ```bash
@@ -104,12 +110,28 @@ Use another compatible repo:
 - Qt icons: `Papirus-Dark`
 - Qt theme engine: `Kvantum` with `Gruvbox-Dark-Brown`
 - Custom surfaces: `waybar`, `rofi`, `mako`, `swaylock` aligned to the same palette
+- Display manager: `SDDM` theme `codex-gruvbox`
 
 ## Session Menu
 
 - Power menu: `~/.local/bin/power-menu`
-  - prefers `wleave`
-  - falls back to `wlogout`
+  - uses `wlogout`
 - Logout helper for `niri`: `~/.local/bin/session-logout`
 - Default hotkey in `niri`: `Mod+Shift+P`
 - Monitor power-off moved to: `Mod+Ctrl+P`
+
+## SDDM
+
+`SDDM` is a system-level component, so theme files install outside `$HOME`.
+
+Dry-run only:
+
+```bash
+./bootstrap.sh --action install --dry-run --component sddm-theme --component sddm-config --package-group display-manager
+```
+
+Real install:
+
+```bash
+sudo ./bootstrap.sh --action install --component sddm-theme --component sddm-config --package-group display-manager --packages never --yes --target-home /
+```

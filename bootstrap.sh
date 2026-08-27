@@ -184,6 +184,15 @@ join_by() {
   done
 }
 
+resolve_dest_path() {
+  local dest="$1"
+  if [[ "${dest}" == /* ]]; then
+    printf '%s\n' "${dest}"
+  else
+    printf '%s\n' "${TARGET_HOME}/${dest}"
+  fi
+}
+
 resolve_repo() {
   local input="$1"
   if [[ -d "${input}" ]]; then
@@ -570,7 +579,7 @@ run_relevance_check() {
   for row in "${ACTIVE_COMPONENT_ROWS[@]}"; do
     IFS='|' read -r name src dest mode desc <<< "${row}"
     abs_src="${REPO_DIR}/${src}"
-    abs_dest="${TARGET_HOME}/${dest}"
+    abs_dest="$(resolve_dest_path "${dest}")"
     if [[ -e "${abs_src}" ]]; then
       log "  OK  ${name}: ${src} -> ${dest}"
     else
@@ -619,9 +628,10 @@ copy_component() {
   local src="$2"
   local dest="$3"
   local abs_src="${REPO_DIR}/${src}"
-  local abs_dest="${TARGET_HOME}/${dest}"
+  local abs_dest
   local abs_parent
 
+  abs_dest="$(resolve_dest_path "${dest}")"
   abs_parent="$(dirname "${abs_dest}")"
   mkdir -p "${abs_parent}"
 
