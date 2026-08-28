@@ -2,9 +2,16 @@
 
 set -eu
 
-wallpaper="$HOME/.config/hypr/wallpapers/vimCheatSheet.png"
+niri_wallpaper="${XDG_CONFIG_HOME:-$HOME/.config}/niri/wallpapers/vimCheatSheet.png"
+legacy_wallpaper="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/wallpapers/vimCheatSheet.png"
 state_dir="$HOME/.cache/niri"
 state_file="$state_dir/current_wallpaper"
+
+if [ -f "$niri_wallpaper" ]; then
+    wallpaper="$niri_wallpaper"
+else
+    wallpaper="$legacy_wallpaper"
+fi
 
 mkdir -p "$state_dir"
 

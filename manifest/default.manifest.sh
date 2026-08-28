@@ -6,6 +6,7 @@ DOTBOOTSTRAP_VERSION="1"
 DOTBOOTSTRAP_COMPONENTS=(
   "local-bin|bin|.local/bin|required|Portable helper scripts"
   "alacritty|alacritty|.config/alacritty|required|Alacritty config"
+  "autostart|autostart|.config/autostart|optional|XDG autostart overrides"
   "btop|btop|.config/btop|optional|btop config"
   "fish|fish|.config/fish|optional|Fish shell config"
   "gtk3|gtk-3.0|.config/gtk-3.0|optional|GTK3 settings"
@@ -26,7 +27,6 @@ DOTBOOTSTRAP_COMPONENTS=(
   "swayidle|swayidle|.config/swayidle|optional|swayidle config"
   "swaylock|swaylock|.config/swaylock|optional|swaylock config"
   "wlogout|wlogout|.config/wlogout|optional|wlogout config"
-  "wleave|wleave|.config/wleave|optional|wleave config"
   "zathura|zathura|.config/zathura|optional|Zathura config"
   "mimeapps|mimeapps.list|.config/mimeapps.list|optional|MIME associations"
   "user-dirs|user-dirs.dirs|.config/user-dirs.dirs|optional|XDG user dirs"
@@ -36,6 +36,7 @@ DOTBOOTSTRAP_COMPONENTS=(
 DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
   "local-bin"
   "alacritty"
+  "autostart"
   "fish"
   "gtk3"
   "gtk4"
@@ -53,7 +54,6 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
   "swayidle"
   "swaylock"
   "wlogout"
-  "wleave"
   "zathura"
   "mimeapps"
   "user-dirs"
@@ -78,7 +78,6 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
   "session-menu|core|always|wlogout|Fallback session menu"
-  "session-menu-next|full|always|wleave-git|Preferred GTK4 session menu from AUR"
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(

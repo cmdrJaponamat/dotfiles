@@ -75,12 +75,12 @@
     },
     "clock#time": {
         "interval": 10,
-        "format": "  {:%H:%M}",
+        "format": " {:%H:%M}",
         "tooltip": false
     },
     "clock#date": {
         "interval": 20,
-        "format": "  {:%a %Y %b %d}",
+        "format": " {:%a %Y %b %d}",
         "on-click": "alacritty --class calendar -e calcure",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "today-format": "<b><u>{}</u></b>"
@@ -88,28 +88,37 @@
     "temperature": {
         //"thermal-zone": 1,
         "interval": 1,
+        "states": {
+            "warning": 60,
+            "critical": 75
+        },
         "critical-threshold": 75,
-        "format-critical": "  {temperatureC}°C",
-        "format": "{icon}  {temperatureC}°C",
+        "format-critical": " {temperatureC}°C",
+        "format": "{icon} {temperatureC}°C",
         "format-icons": ["", "", ""],
         "max-length": 8,
         "min-length": 7,
         "tooltip": false
     },
     "cpu": {
-        "interval": 5,      
-        "format": "  {max_frequency:1}GHz  󰓅  {usage:2}%",
+        "interval": 5,
+        "states": {
+            "warning": 45,
+            "critical": 80
+        },
+        "format": " {max_frequency:1}GHz 󰓅 {usage:2}%",
         "on-click": "alacritty -e btop",
         "tooltip": false
     },
     "network": {
         // "interface": "wlan0", // (Optional) To force the use of this interface,
-        "format-wifi": "<span color=\"#ebdbb2\"> </span>  {essid}",
+        "format-wifi": "<span color=\"#ebdbb2\"></span> {essid}",
         "format-ethernet": "{ifname}: {ipaddr}/{cidr}  ",
         "format-linked": "{ifname} (No IP) 󰈁",
         "format-disconnected": "󱚵 ",
         "format-alt": "{ifname}: {ipaddr}/{cidr}",
         "family": "ipv4",
+        "max-length": 18,
         "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}",
         "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}"
     },
@@ -130,10 +139,10 @@
         "interval": 30
     },
     "custom/kdeconnect": {
-      "exec": "$HOME/.config/hypr/component/waybar/custom_modules/custom-kdeconnect.sh battery",
+      "exec": "$HOME/.config/niri/waybar/custom_modules/custom-kdeconnect.sh battery",
       "format": " {}",
       "interval": 60,
-      "on-click": "$HOME/.config/hypr/component/waybar/custom_modules/custom-kdeconnect.sh ring"
+      "on-click": "$HOME/.config/niri/waybar/custom_modules/custom-kdeconnect.sh ring"
     },   
 
     "battery": {
@@ -141,17 +150,17 @@
             "warning": 50,
             "critical": 20
         },
-        "format": "{icon}  {capacity}%",
-        "format-good": "{icon}  {capacity}%",
-        "format-full": "{icon}  {capacity}%",
-        "format-charging": "{icon}  {capacity}%",
+        "format": "{icon} {capacity}%",
+        "format-good": "{icon} {capacity}%",
+        "format-full": "{icon} {capacity}%",
+        "format-charging": "{icon} {capacity}%",
         "format-plugged": "{icon} {capacity}%",
         "format-icons": [" ", " ", " ", " ", " "]
     },
 
     "pulseaudio": {
         "scroll-step": 3, // %, can be a float
-        "format": "{icon}  {volume:3}% {format_source}",
+        "format": "{icon} {volume:3}% {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": "󰗿 {icon} {format_source}",
         "format-muted": " {format_source}",
@@ -177,7 +186,7 @@
       "format": "{icon}",
       "interval": "once",
       "return-type": "json",
-      "exec": "$HOME/.config/hypr/component/waybar/custom_modules/cpugovernor.sh",
+      "exec": "$HOME/.config/niri/waybar/custom_modules/cpugovernor.sh",
       "min-length": 2,
       "max-length": 3,
       "signal": 8,
@@ -185,13 +194,16 @@
             "perf": "",
             "ondemand": ""
         },
-        "on-click": "$HOME/.config/hypr/component/waybar/custom_modules/cpugovernor.sh switch"
+        "on-click": "$HOME/.config/niri/waybar/custom_modules/cpugovernor.sh switch"
         // Requires cpupower to switch governors
     },
     "custom/playerctl": {
-        "exec": "$HOME/.config/hypr/component/waybar/custom_modules/media-player-status.py",
+        "exec": "$HOME/.config/niri/waybar/custom_modules/media-player-status.py",
         "return-type": "json",
-        "on-click": "playerctl play-pause"
+        "on-click": "playerctl play-pause",
+        "max-length": 24,
+        "min-length": 10,
+        "tooltip": true
     },
     "custom/media": {
         "format": "{icon} {}",
@@ -202,7 +214,7 @@
             "default": "🎜"
         },
         "escape": false,
-        "exec": "$HOME/.config/hypr/component/waybar/custom_modules/mediaplayer.py 2> /dev/null" // Script in resources folder
+        "exec": "$HOME/.config/niri/waybar/custom_modules/media-player-status.py"
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on 
     },
     

@@ -2,9 +2,16 @@
 
 set -eu
 
-wallpaper_dir="$HOME/.config/hypr/wallpapers"
+niri_wallpaper_dir="${XDG_CONFIG_HOME:-$HOME/.config}/niri/wallpapers"
+legacy_wallpaper_dir="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/wallpapers"
 state_dir="$HOME/.cache/niri"
 state_file="$state_dir/current_wallpaper"
+
+if [ -d "$niri_wallpaper_dir" ]; then
+    wallpaper_dir="$niri_wallpaper_dir"
+else
+    wallpaper_dir="$legacy_wallpaper_dir"
+fi
 
 mkdir -p "$state_dir"
 

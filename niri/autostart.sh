@@ -3,11 +3,19 @@
 set -eu
 
 niri_config="$HOME/.config/niri"
-hypr_config="$HOME/.config/hypr"
-waybar_dir="$niri_config/waybar"
-wallpaper_dir="$hypr_config/wallpapers"
+niri_wallpaper_dir="$niri_config/wallpapers"
+legacy_wallpaper_dir="$HOME/.config/hypr/wallpapers"
 wallpaper_state="$HOME/.cache/niri/current_wallpaper"
 waybar_log="$HOME/.cache/niri/waybar.log"
+rgb_candidate="$niri_config/scripts/rgb"
+legacy_rgb_candidate="$HOME/.config/hypr/scripts/rgb"
+
+if [ -d "$niri_wallpaper_dir" ]; then
+    wallpaper_dir="$niri_wallpaper_dir"
+else
+    wallpaper_dir="$legacy_wallpaper_dir"
+fi
+
 default_wallpaper="$wallpaper_dir/home-sweet-home.jpg"
 
 if command -v awww >/dev/null 2>&1 && command -v awww-daemon >/dev/null 2>&1; then
@@ -29,7 +37,7 @@ pkill waybar 2>/dev/null || true
 (
     sleep 1
     pkill waybar 2>/dev/null || true
-    exec waybar -l trace -c "$waybar_dir/config" -s "$waybar_dir/style.css" >"$waybar_log" 2>&1
+    exec "$HOME/.local/bin/relaunch-waybar"
 ) &
 
 pkill mako 2>/dev/null || true
@@ -60,8 +68,9 @@ if [ -n "$wallpaper_daemon_cmd" ]; then
     fi
 fi
 
-if [ -x "$hypr_config/scripts/rgb" ]; then
-    "$hypr_config/scripts/rgb" &
+if [ -x "$rgb_candidate" ]; then
+    "$rgb_candidate" &
+elif [ -x "$legacy_rgb_candidate" ]; then
+    "$legacy_rgb_candidate" &
 fi
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-Telegram &
