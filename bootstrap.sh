@@ -218,6 +218,23 @@ component_selected() {
   return 1
 }
 
+optional_flow_matches_hardware() {
+  local selector="$1"
+  case "${selector}" in
+    ""|"always")
+      return 0
+      ;;
+  esac
+
+  local required
+  read -r -a required <<< "${selector}"
+  local tag
+  for tag in "${required[@]}"; do
+    contains "${tag}" "${DETECTED_HARDWARE_TAGS[@]:-}" && return 0
+  done
+  return 1
+}
+
 resolve_repo() {
   local input="$1"
   if [[ -d "${input}" ]]; then
@@ -792,6 +809,18 @@ print_post_install_steps() {
   else
     log "  UI density was forced to ${ACTIVE_UI_DENSITY}; adjust later with ~/.local/bin/ui-density if needed."
   fi
+
+  if [[ -v DOTBOOTSTRAP_OPTIONAL_FLOWS ]] && [[ "${#DOTBOOTSTRAP_OPTIONAL_FLOWS[@]}" -gt 0 ]]; then
+    log
+    log "Optional flows:"
+    local row name selector summary details
+    for row in "${DOTBOOTSTRAP_OPTIONAL_FLOWS[@]:-}"; do
+      IFS='|' read -r name selector summary details <<< "${row}"
+      optional_flow_matches_hardware "${selector}" || continue
+      log "  ${name}: ${summary}"
+      [[ -n "${details}" ]] && log "    ${details}"
+    done
+  fi
 }
 
 package_group_matches_hardware() {
@@ -1145,6 +1174,15 @@ list_manifest() {
     IFS='|' read -r name items desc <<< "${row}"
     log "  ${name} :: ${items} :: ${desc}"
   done
+  if [[ -v DOTBOOTSTRAP_OPTIONAL_FLOWS ]] && [[ "${#DOTBOOTSTRAP_OPTIONAL_FLOWS[@]}" -gt 0 ]]; then
+    log
+    log "Optional flows:"
+    for row in "${DOTBOOTSTRAP_OPTIONAL_FLOWS[@]:-}"; do
+      IFS='|' read -r name selector summary details <<< "${row}"
+      log "  ${name} [${selector}] :: ${summary}"
+      [[ -n "${details}" ]] && log "    ${details}"
+    done
+  fi
 }
 
 resolve_repo "${REPO_INPUT}"

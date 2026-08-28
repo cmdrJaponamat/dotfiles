@@ -61,8 +61,8 @@
 Подзадачи:
 
 - [x] Добавить более безопасный post-install сценарий.
-- [ ] Явно описать optional шаги: сервисы, AUR, `SDDM`, power-management.
-- [ ] Уточнить handling для гибридной графики и `nvidia`.
+- [x] Явно описать optional шаги: сервисы, AUR, `SDDM`, power-management.
+- [x] Уточнить handling для гибридной графики и `nvidia`.
 
 ### Этап 5. Финализация
 

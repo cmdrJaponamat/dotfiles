@@ -65,6 +65,12 @@ Full install with optional apps:
 ./bootstrap.sh --action install --dry-run --package-preset full
 ```
 
+Show optional manual flows:
+
+```bash
+./bootstrap.sh --action list
+```
+
 Preview full install including system login theme:
 
 ```bash
@@ -84,6 +90,7 @@ Hardware-aware install with automatic UI density selection:
 ```
 
 The install output now ends with a post-install checklist for the detected hardware so you know what still needs relogin, reboot, service enablement or manual GPU follow-up.
+It also shows optional manual flows for things that should not be auto-applied blindly, such as AUR extras, service enablement and proprietary NVIDIA setup.
 
 Force a smaller or larger interface profile:
 

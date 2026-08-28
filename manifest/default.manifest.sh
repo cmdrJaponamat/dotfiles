@@ -88,6 +88,15 @@ DOTBOOTSTRAP_PACKAGE_PRESETS=(
 
 DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET="core"
 
+DOTBOOTSTRAP_OPTIONAL_FLOWS=(
+  "aur-helper|always|Install an AUR helper manually if you want AUR-backed extras later|Example: yay or paru"
+  "slimbookbattery|laptop battery|Optional tray frontend for TLP profiles; keep disabled by default unless you want live profile switching|AUR/manual install only"
+  "nvidia-proprietary|nvidia_gpu|Review proprietary NVIDIA driver flow manually before treating install as complete|Packages depend on GPU generation and kernel choice"
+  "display-manager-enable|always|If SDDM was installed, enable its system service before reboot|sudo systemctl enable sddm.service"
+  "wireless-services|wifi bluetooth|Enable runtime services for wireless hardware if the machine needs them|sudo systemctl enable --now NetworkManager bluetooth"
+  "tlp-enable|laptop battery|Enable TLP after package install on laptops|sudo systemctl enable --now tlp.service"
+)
+
 DOTBOOTSTRAP_RELEVANCE_WARN_PATTERNS=(
   '/home/'
   'userapp-'
