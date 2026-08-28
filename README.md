@@ -83,6 +83,8 @@ Hardware-aware install with automatic UI density selection:
 ./bootstrap.sh --action install --dry-run --hardware-profile laptop --ui-density auto
 ```
 
+The install output now ends with a post-install checklist for the detected hardware so you know what still needs relogin, reboot, service enablement or manual GPU follow-up.
+
 Force a smaller or larger interface profile:
 
 ```bash
