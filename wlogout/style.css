@@ -69,40 +69,40 @@ button:hover#reboot {
 
 #lock {
   background-image: image(
-    url('icons/lock.svg')
+    url('icons/lock.png')
   );
   border-top-left-radius: 28px;
 }
 
 #logout {
   background-image: image(
-    url('icons/logout.svg')
+    url('icons/logout.png')
   );
 }
 
 #shutdown {
   background-image: image(
-    url('icons/shutdown.svg')
+    url('icons/shutdown.png')
   );
 }
 
 #reboot {
   background-image: image(
-    url('icons/reboot.svg')
+    url('icons/reboot.png')
   );
   border-bottom-right-radius: 28px;
 }
 
 #suspend {
   background-image: image(
-    url('icons/suspend.svg')
+    url('icons/suspend.png')
   );
   border-top-right-radius: 28px;
 }
 
 #hibernate {
   background-image: image(
-    url('icons/hibernate.svg')
+    url('icons/hibernate.png')
   );
   border-bottom-left-radius: 28px;
 }
