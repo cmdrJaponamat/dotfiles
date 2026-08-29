@@ -5,7 +5,7 @@
 }
 
 window {
-  background-color: rgba(29, 32, 33, 0.82);
+  background-color: rgba(29, 32, 33, 0.9);
 }
 
 button {
@@ -15,12 +15,12 @@ button {
   border: 2px solid #3c3836;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 18%;
-  border-radius: 18px;
-  box-shadow: 0 0 0 1px rgba(80, 73, 69, 0.2);
+  background-size: 20%;
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px rgba(80, 73, 69, 0.24);
   text-shadow: none;
-  margin: 14px;
-  padding: 18px;
+  margin: 12px;
+  padding: 20px 18px 18px;
   transition: all 0.18s ease-out;
 }
 
@@ -28,7 +28,7 @@ button:focus {
   color: #ebdbb2;
   background-color: #3c3836;
   border-color: #fabd2f;
-  background-size: 22%;
+  background-size: 23%;
 }
 
 button:hover#lock {
