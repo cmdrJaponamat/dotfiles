@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+niri_waybar_dir="${config_home}/niri/waybar"
+waybar_log="${XDG_CACHE_HOME:-$HOME/.cache}/niri/waybar.log"
+
+mkdir -p "$(dirname "${waybar_log}")"
+
+pkill waybar 2>/dev/null || true
+exec waybar -l trace -c "${niri_waybar_dir}/config" -s "${niri_waybar_dir}/style.css" >"${waybar_log}" 2>&1

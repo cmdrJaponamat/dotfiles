@@ -1,0 +1,347 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/ui-density"
+state_file="${state_dir}/current"
+profile="${1:-auto}"
+
+mkdir -p "${state_dir}"
+
+detect_auto_profile() {
+  local best_width=0
+  local best_height=0
+  local best_area=0
+  local mode_file line width height area
+
+  while IFS= read -r -d '' mode_file; do
+    while IFS= read -r line; do
+      [[ "${line}" =~ ^([0-9]+)x([0-9]+)$ ]] || continue
+      width="${BASH_REMATCH[1]}"
+      height="${BASH_REMATCH[2]}"
+      area=$(( width * height ))
+      if (( area > best_area )); then
+        best_area="${area}"
+        best_width="${width}"
+        best_height="${height}"
+      fi
+    done < "${mode_file}"
+  done < <(find /sys/class/drm -path "*/modes" -print0 2>/dev/null)
+
+  if (( best_height >= 2160 || best_width >= 3840 )); then
+    printf 'huge\n'
+  elif (( best_height >= 1440 || best_width >= 2560 )); then
+    printf 'large\n'
+  elif (( best_height > 0 && best_height <= 800 )); then
+    printf 'tiny\n'
+  elif (( best_height > 0 && best_height <= 1080 )); then
+    printf 'compact\n'
+  else
+    printf 'normal\n'
+  fi
+}
+
+profile_up() {
+  case "$(current_profile)" in
+    tiny) printf 'compact\n' ;;
+    compact) printf 'normal\n' ;;
+    normal) printf 'large\n' ;;
+    large) printf 'huge\n' ;;
+    huge) printf 'huge\n' ;;
+    *) detect_auto_profile ;;
+  esac
+}
+
+profile_down() {
+  case "$(current_profile)" in
+    huge) printf 'large\n' ;;
+    large) printf 'normal\n' ;;
+    normal) printf 'compact\n' ;;
+    compact) printf 'tiny\n' ;;
+    tiny) printf 'tiny\n' ;;
+    *) detect_auto_profile ;;
+  esac
+}
+
+current_profile() {
+  if [[ -f "${state_file}" ]]; then
+    sed -n '1p' "${state_file}"
+  else
+    detect_auto_profile
+  fi
+}
+
+set_values() {
+  case "$1" in
+    tiny)
+      alacritty_font_size="10.0"
+      gtk_font_size="9"
+      qt_font_size="9"
+      rofi_font_size="10"
+      waybar_font_size="8pt"
+      waybar_network_max_length="13"
+      waybar_playerctl_max_length="16"
+      waybar_playerctl_min_length="0"
+      mako_font_size="10"
+      mako_width="320"
+      mako_padding="10"
+      swaylock_indicator_radius="82"
+      swaylock_indicator_thickness="9"
+      wlogout_font_size="14px"
+      zathura_font_size="10"
+      sddm_scale="0.92"
+      sddm_clock_font_size="64"
+      sddm_date_font_size="14"
+      sddm_message_font_size="12"
+      sddm_username_font_size="18"
+      sddm_password_width="228"
+      sddm_password_height="34"
+      sddm_password_font_size="13"
+      sddm_button_font_size="12"
+      sddm_spinner_font_size="14"
+      sddm_warning_font_size="11"
+      sddm_menu_button_size="28"
+      sddm_popup_font_size="12"
+      sddm_session_button_width="200"
+      sddm_session_popup_width="200"
+      sddm_session_font_size="11"
+      sddm_layout_popup_width="180"
+      sddm_layout_font_size="11"
+      sddm_virtual_keyboard_scale="0.92"
+      ;;
+    compact)
+      alacritty_font_size="11.0"
+      gtk_font_size="10"
+      qt_font_size="10"
+      rofi_font_size="11"
+      waybar_font_size="9pt"
+      waybar_network_max_length="15"
+      waybar_playerctl_max_length="18"
+      waybar_playerctl_min_length="0"
+      mako_font_size="11"
+      mako_width="360"
+      mako_padding="12"
+      swaylock_indicator_radius="92"
+      swaylock_indicator_thickness="10"
+      wlogout_font_size="16px"
+      zathura_font_size="11"
+      sddm_scale="1.0"
+      sddm_clock_font_size="72"
+      sddm_date_font_size="16"
+      sddm_message_font_size="13"
+      sddm_username_font_size="20"
+      sddm_password_width="250"
+      sddm_password_height="38"
+      sddm_password_font_size="14"
+      sddm_button_font_size="13"
+      sddm_spinner_font_size="16"
+      sddm_warning_font_size="12"
+      sddm_menu_button_size="32"
+      sddm_popup_font_size="13"
+      sddm_session_button_width="220"
+      sddm_session_popup_width="220"
+      sddm_session_font_size="12"
+      sddm_layout_popup_width="200"
+      sddm_layout_font_size="12"
+      sddm_virtual_keyboard_scale="1.0"
+      ;;
+    normal)
+      alacritty_font_size="12.0"
+      gtk_font_size="11"
+      qt_font_size="11"
+      rofi_font_size="12"
+      waybar_font_size="10pt"
+      waybar_network_max_length="18"
+      waybar_playerctl_max_length="24"
+      waybar_playerctl_min_length="10"
+      mako_font_size="12"
+      mako_width="420"
+      mako_padding="14"
+      swaylock_indicator_radius="110"
+      swaylock_indicator_thickness="12"
+      wlogout_font_size="18px"
+      zathura_font_size="12"
+      sddm_scale="1.3"
+      sddm_clock_font_size="88"
+      sddm_date_font_size="18"
+      sddm_message_font_size="15"
+      sddm_username_font_size="22"
+      sddm_password_width="280"
+      sddm_password_height="42"
+      sddm_password_font_size="16"
+      sddm_button_font_size="15"
+      sddm_spinner_font_size="18"
+      sddm_warning_font_size="14"
+      sddm_menu_button_size="36"
+      sddm_popup_font_size="14"
+      sddm_session_button_width="240"
+      sddm_session_popup_width="240"
+      sddm_session_font_size="13"
+      sddm_layout_popup_width="220"
+      sddm_layout_font_size="13"
+      sddm_virtual_keyboard_scale="1.15"
+      ;;
+    large)
+      alacritty_font_size="14.0"
+      gtk_font_size="13"
+      qt_font_size="13"
+      rofi_font_size="14"
+      waybar_font_size="11pt"
+      waybar_network_max_length="18"
+      waybar_playerctl_max_length="24"
+      waybar_playerctl_min_length="8"
+      mako_font_size="14"
+      mako_width="520"
+      mako_padding="16"
+      swaylock_indicator_radius="128"
+      swaylock_indicator_thickness="14"
+      wlogout_font_size="22px"
+      zathura_font_size="14"
+      sddm_scale="1.55"
+      sddm_clock_font_size="108"
+      sddm_date_font_size="22"
+      sddm_message_font_size="18"
+      sddm_username_font_size="26"
+      sddm_password_width="340"
+      sddm_password_height="50"
+      sddm_password_font_size="19"
+      sddm_button_font_size="18"
+      sddm_spinner_font_size="22"
+      sddm_warning_font_size="16"
+      sddm_menu_button_size="42"
+      sddm_popup_font_size="16"
+      sddm_session_button_width="280"
+      sddm_session_popup_width="280"
+      sddm_session_font_size="15"
+      sddm_layout_popup_width="250"
+      sddm_layout_font_size="15"
+      sddm_virtual_keyboard_scale="1.3"
+      ;;
+    huge)
+      alacritty_font_size="16.0"
+      gtk_font_size="15"
+      qt_font_size="15"
+      rofi_font_size="16"
+      waybar_font_size="11pt"
+      waybar_network_max_length="16"
+      waybar_playerctl_max_length="18"
+      waybar_playerctl_min_length="0"
+      mako_font_size="16"
+      mako_width="620"
+      mako_padding="18"
+      swaylock_indicator_radius="148"
+      swaylock_indicator_thickness="16"
+      wlogout_font_size="26px"
+      zathura_font_size="16"
+      sddm_scale="1.8"
+      sddm_clock_font_size="124"
+      sddm_date_font_size="26"
+      sddm_message_font_size="20"
+      sddm_username_font_size="30"
+      sddm_password_width="390"
+      sddm_password_height="56"
+      sddm_password_font_size="21"
+      sddm_button_font_size="20"
+      sddm_spinner_font_size="24"
+      sddm_warning_font_size="17"
+      sddm_menu_button_size="48"
+      sddm_popup_font_size="18"
+      sddm_session_button_width="320"
+      sddm_session_popup_width="320"
+      sddm_session_font_size="17"
+      sddm_layout_popup_width="290"
+      sddm_layout_font_size="17"
+      sddm_virtual_keyboard_scale="1.45"
+      ;;
+    *)
+      printf 'Unknown profile: %s\n' "$1" >&2
+      exit 1
+      ;;
+  esac
+}
+
+rewrite_file() {
+  local file="$1"
+  local expr="$2"
+  [[ -f "${file}" ]] || return 0
+  perl -0pi -e "${expr}" "${file}"
+}
+
+apply_profile() {
+  local resolved="$1"
+  set_values "${resolved}"
+
+  rewrite_file "${config_home}/alacritty/alacritty.toml" "s/^size = .*\$/size = ${alacritty_font_size}/m"
+  rewrite_file "${config_home}/gtk-3.0/settings.ini" "s/^gtk-font-name=.*\$/gtk-font-name=JetBrains Mono ${gtk_font_size}/m"
+  rewrite_file "${config_home}/gtk-4.0/settings.ini" "s/^gtk-font-name=.*\$/gtk-font-name=JetBrains Mono ${gtk_font_size}/m"
+  rewrite_file "${config_home}/qt5ct/qt5ct.conf" "s/^fixed=.*\$/fixed=\"JetBrains Mono,${qt_font_size},-1,5,50,0,0,0,0,0,Regular\"/m; s/^general=.*\$/general=\"JetBrains Mono,${qt_font_size},-1,5,50,0,0,0,0,0,Regular\"/m"
+  rewrite_file "${config_home}/qt6ct/qt6ct.conf" "s/^fixed=.*\$/fixed=\"JetBrains Mono,${qt_font_size},-1,5,50,0,0,0,0,0,Regular\"/m; s/^general=.*\$/general=\"JetBrains Mono,${qt_font_size},-1,5,50,0,0,0,0,0,Regular\"/m"
+  rewrite_file "${config_home}/rofi/config.rasi" "s/font: \"JetBrains Mono Nerd Font [0-9]+\";/font: \"JetBrains Mono Nerd Font ${rofi_font_size}\";/m"
+  rewrite_file "${config_home}/niri/waybar/style.css" "s/font-size:\\s*[0-9]+pt;/font-size: ${waybar_font_size};/m"
+  rewrite_file "${config_home}/niri/waybar/config" "s/(\"network\":\\s*\\{.*?\"max-length\":\\s*)\\d+/\${1}${waybar_network_max_length}/s; s/(\"custom\\/playerctl\":\\s*\\{.*?\"max-length\":\\s*)\\d+/\${1}${waybar_playerctl_max_length}/s; s/(\"custom\\/playerctl\":\\s*\\{.*?\"min-length\":\\s*)\\d+/\${1}${waybar_playerctl_min_length}/s"
+  rewrite_file "${config_home}/mako/config" "s/^font=.*/font=JetBrains Mono Nerd Font ${mako_font_size}/m; s/^width=.*/width=${mako_width}/m; s/^padding=.*/padding=${mako_padding}/m"
+  rewrite_file "${config_home}/swaylock/config" "s/^indicator-radius=.*/indicator-radius=${swaylock_indicator_radius}/m; s/^indicator-thickness=.*/indicator-thickness=${swaylock_indicator_thickness}/m"
+  rewrite_file "${config_home}/wlogout/style.css" "s/font-size:\\s*[0-9]+px;/font-size: ${wlogout_font_size};/m"
+  rewrite_file "${config_home}/zathura/zathurarc" "s/set font\\s+\"JetBrainsMono Nerd Font [0-9]+\"/set font                    \"JetBrainsMono Nerd Font ${zathura_font_size}\"/m"
+
+  if [[ -f /usr/share/sddm/themes/silent/configs/gruvbox.conf && -w /usr/share/sddm/themes/silent/configs/gruvbox.conf ]]; then
+    rewrite_file /usr/share/sddm/themes/silent/configs/gruvbox.conf '
+      s/^scale = .*$/'"scale = ${sddm_scale}"'/m;
+      s/(\[LockScreen\.Clock\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_clock_font_size}"'/;
+      s/(\[LockScreen\.Date\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_date_font_size}"'/;
+      s/(\[LockScreen\.Message\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_message_font_size}"'/;
+      s/(\[LoginScreen\.LoginArea\.Username\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_username_font_size}"'/;
+      s/(\[LoginScreen\.LoginArea\.PasswordInput\]\n(?:.*\n)*?width = )\d+/${1}'"${sddm_password_width}"'/;
+      s/(\[LoginScreen\.LoginArea\.PasswordInput\]\n(?:.*\n)*?height = )\d+/${1}'"${sddm_password_height}"'/;
+      s/(\[LoginScreen\.LoginArea\.PasswordInput\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_password_font_size}"'/;
+      s/(\[LoginScreen\.LoginArea\.LoginButton\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_button_font_size}"'/;
+      s/(\[LoginScreen\.LoginArea\.Spinner\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_spinner_font_size}"'/;
+      s/(\[LoginScreen\.LoginArea\.WarningMessage\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_warning_font_size}"'/;
+      s/(\[LoginScreen\.MenuArea\.Buttons\]\n(?:.*\n)*?size = )\d+/${1}'"${sddm_menu_button_size}"'/;
+      s/(\[LoginScreen\.MenuArea\.Popups\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_popup_font_size}"'/;
+      s/(\[LoginScreen\.MenuArea\.Session\]\n(?:.*\n)*?button-width = )\d+/${1}'"${sddm_session_button_width}"'/;
+      s/(\[LoginScreen\.MenuArea\.Session\]\n(?:.*\n)*?popup-width = )\d+/${1}'"${sddm_session_popup_width}"'/;
+      s/(\[LoginScreen\.MenuArea\.Session\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_session_font_size}"'/;
+      s/(\[LoginScreen\.MenuArea\.Layout\]\n(?:.*\n)*?popup-width = )\d+/${1}'"${sddm_layout_popup_width}"'/;
+      s/(\[LoginScreen\.MenuArea\.Layout\]\n(?:.*\n)*?font-size = )\d+/${1}'"${sddm_layout_font_size}"'/;
+      s/(\[LoginScreen\.VirtualKeyboard\]\n(?:.*\n)*?scale = )[^\n]+/${1}'"${sddm_virtual_keyboard_scale}"'/;
+    '
+  fi
+
+  printf '%s\n' "${resolved}" > "${state_file}"
+
+  if [[ -x "${HOME}/.local/bin/relaunch-waybar" ]]; then
+    "${HOME}/.local/bin/relaunch-waybar" &
+  fi
+
+  if pgrep -x mako >/dev/null 2>&1; then
+    pkill mako 2>/dev/null || true
+    nohup mako >/dev/null 2>&1 &
+  fi
+
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send "UI density" "Profile: ${resolved}" >/dev/null 2>&1 || true
+  fi
+}
+
+case "${profile}" in
+  auto)
+    apply_profile "$(detect_auto_profile)"
+    ;;
+  tiny|compact|normal|large|huge)
+    apply_profile "${profile}"
+    ;;
+  up)
+    apply_profile "$(profile_up)"
+    ;;
+  down)
+    apply_profile "$(profile_down)"
+    ;;
+  current)
+    current_profile
+    ;;
+  *)
+    printf 'Usage: %s [auto|tiny|compact|normal|large|huge|up|down|current]\n' "$0" >&2
+    exit 1
+    ;;
+esac
