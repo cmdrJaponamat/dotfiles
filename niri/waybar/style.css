@@ -213,9 +213,32 @@ window#waybar {
     color: @bg0;
 }
 #custom-power-draw {
-    background: @right-accent;
-    color: @fg;
+    background: @blue;
+    color: @bg0;
     padding: 0.56em 0.82em;
+}
+#custom-power-draw.low {
+    background: @aqua;
+    color: @bg0;
+}
+#custom-power-draw.medium {
+    background: @yellow;
+    color: @bg0;
+}
+#custom-power-draw.high {
+    background: @red;
+    color: @fg;
+}
+#custom-power-draw.unknown {
+    background: @bg2;
+    color: @fg-muted;
+}
+#custom-power-draw.charging-state,
+#custom-power-draw.charging,
+#custom-power-draw.full,
+#custom-power-draw.not-charging {
+    background: @green;
+    color: @bg0;
 }
 #custom-power-draw.hidden {
     background: transparent;

@@ -65,7 +65,7 @@ def format_watts(value: float) -> str:
 
 
 def classify(instant: float) -> str:
-    if instant >= 12:
+    if instant >= 14:
         return "high"
     if instant >= 9:
         return "medium"
@@ -74,14 +74,30 @@ def classify(instant: float) -> str:
 
 def main() -> None:
     if not POWER_NOW_PATH.exists():
-        print(json.dumps({"text": "PWR n/a", "tooltip": "Battery power_now is unavailable"}))
+        print(
+            json.dumps(
+                {
+                    "text": "PWR n/a",
+                    "tooltip": "Battery power_now is unavailable",
+                    "class": ["unknown"],
+                }
+            )
+        )
         return
 
     now = time.time()
     status = read_text(STATUS_PATH) if STATUS_PATH.exists() else "Unknown"
     if status.lower() in {"charging", "full", "not charging"}:
         clear_history()
-        print(json.dumps({"text": "", "tooltip": "", "class": ["hidden", status.lower()]}))
+        print(
+            json.dumps(
+                {
+                    "text": "",
+                    "tooltip": "",
+                    "class": ["hidden", "charging-state", status.lower()],
+                }
+            )
+        )
         return
 
     instant = read_power_watts()
