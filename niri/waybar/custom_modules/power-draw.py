@@ -12,6 +12,7 @@ STATUS_PATH = BATTERY_PATH / "status"
 STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
 STATE_FILE = STATE_DIR / "waybar-power-draw.json"
 MAX_AGE_SECONDS = 30 * 60
+SPARKLINE_BARS = "▁▂▃▄▅▆▇█"
 
 
 def read_text(path: Path) -> str:
@@ -64,12 +65,51 @@ def format_watts(value: float) -> str:
     return f"{value:.1f}W"
 
 
+def format_compact(value: float) -> str:
+    return f"AVG {value:.1f}W"
+
+
 def classify(instant: float) -> str:
     if instant >= 14:
         return "high"
     if instant >= 9:
         return "medium"
     return "low"
+
+
+def history_stats(history: list[dict[str, float]]) -> tuple[float, float]:
+    watts = [entry["watts"] for entry in history]
+    return min(watts), max(watts)
+
+
+def sparkline(history: list[dict[str, float]], buckets: int = 12) -> str:
+    if not history:
+        return ""
+
+    watts = [entry["watts"] for entry in history]
+    if len(watts) <= buckets:
+        samples = watts
+    else:
+        chunk_size = len(watts) / buckets
+        samples = []
+        for index in range(buckets):
+            start = int(index * chunk_size)
+            end = max(start + 1, int((index + 1) * chunk_size))
+            chunk = watts[start:end]
+            samples.append(sum(chunk) / len(chunk))
+
+    low = min(samples)
+    high = max(samples)
+    if high - low < 0.2:
+        return SPARKLINE_BARS[0] * len(samples)
+
+    bars = []
+    span = high - low
+    for value in samples:
+        normalized = (value - low) / span
+        bar_index = min(len(SPARKLINE_BARS) - 1, int(round(normalized * (len(SPARKLINE_BARS) - 1))))
+        bars.append(SPARKLINE_BARS[bar_index])
+    return "".join(bars)
 
 
 def main() -> None:
@@ -109,20 +149,23 @@ def main() -> None:
     avg_10m = average_since(history, now, 10 * 60)
     avg_30m = average_since(history, now, 30 * 60)
 
-    text = f"PWR {format_watts(instant)} {format_watts(avg_10m)} {format_watts(avg_30m)}"
+    min_watts, max_watts = history_stats(history)
+    text = format_compact(avg_10m)
     tooltip = "\n".join(
         [
             f"Status: {status}",
             f"Instant: {format_watts(instant)}",
             f"10 min avg: {format_watts(avg_10m)}",
             f"30 min avg: {format_watts(avg_30m)}",
+            f"Range: {format_watts(min_watts)} .. {format_watts(max_watts)}",
+            f"Trend: {sparkline(history)}",
             f"Samples: {len(history)}",
         ]
     )
     output = {
         "text": text,
         "tooltip": tooltip,
-        "class": [classify(instant), status.lower()],
+        "class": [classify(avg_10m), status.lower()],
     }
     print(json.dumps(output))
 
