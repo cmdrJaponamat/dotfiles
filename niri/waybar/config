@@ -138,7 +138,9 @@
         "format": "{}",
         "interval": 30,
         "tooltip": true,
-        "on-click": "alacritty --class power-draw-report -e python3 $HOME/.config/niri/waybar/custom_modules/power-draw-report.py"
+        "on-click": "alacritty --class power-draw-report -e python3 $HOME/.config/niri/waybar/custom_modules/power-draw-report.py",
+        "on-click-middle": "python3 $HOME/.config/niri/waybar/custom_modules/power-draw.py next-mode",
+        "on-click-right": "python3 $HOME/.config/niri/waybar/custom_modules/power-draw.py clear-history"
     },
     "custom/kdeconnect": {
       "exec": "$HOME/.config/niri/waybar/custom_modules/custom-kdeconnect.sh battery",

@@ -2,6 +2,7 @@
 
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -11,8 +12,10 @@ POWER_NOW_PATH = BATTERY_PATH / "power_now"
 STATUS_PATH = BATTERY_PATH / "status"
 STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
 STATE_FILE = STATE_DIR / "waybar-power-draw.json"
+MODE_FILE = STATE_DIR / "waybar-power-draw-mode"
 MAX_AGE_SECONDS = 30 * 60
 SPARKLINE_BARS = "▁▂▃▄▅▆▇█"
+DISPLAY_MODES = ("instant", "avg5", "avg10", "avg30")
 
 
 def read_text(path: Path) -> str:
@@ -54,6 +57,28 @@ def clear_history() -> None:
         pass
 
 
+def current_mode() -> str:
+    if not MODE_FILE.exists():
+        return "avg10"
+    mode = MODE_FILE.read_text(encoding="utf-8").strip()
+    if mode in DISPLAY_MODES:
+        return mode
+    return "avg10"
+
+
+def save_mode(mode: str) -> None:
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    MODE_FILE.write_text(mode, encoding="utf-8")
+
+
+def next_mode() -> str:
+    mode = current_mode()
+    index = DISPLAY_MODES.index(mode)
+    next_value = DISPLAY_MODES[(index + 1) % len(DISPLAY_MODES)]
+    save_mode(next_value)
+    return next_value
+
+
 def average_since(history: list[dict[str, float]], now: float, seconds: int) -> float:
     samples = [entry["watts"] for entry in history if now - entry["ts"] <= seconds]
     if not samples:
@@ -67,6 +92,16 @@ def format_watts(value: float) -> str:
 
 def format_compact(value: float) -> str:
     return f"AVG {value:.1f}W"
+
+
+def format_mode_label(mode: str, instant: float, avg_5m: float, avg_10m: float, avg_30m: float) -> str:
+    if mode == "instant":
+        return f"NOW {instant:.1f}W"
+    if mode == "avg5":
+        return f"AVG5 {avg_5m:.1f}W"
+    if mode == "avg30":
+        return f"AVG30 {avg_30m:.1f}W"
+    return f"AVG10 {avg_10m:.1f}W"
 
 
 def classify(instant: float) -> str:
@@ -113,6 +148,16 @@ def sparkline(history: list[dict[str, float]], buckets: int = 12) -> str:
 
 
 def main() -> None:
+    if len(sys.argv) > 1:
+        command = sys.argv[1]
+        if command == "clear-history":
+            clear_history()
+            print(json.dumps({"ok": True, "action": command}))
+            return
+        if command == "next-mode":
+            print(json.dumps({"ok": True, "mode": next_mode()}))
+            return
+
     if not POWER_NOW_PATH.exists():
         print(
             json.dumps(
@@ -146,20 +191,27 @@ def main() -> None:
     history = [entry for entry in history if now - entry["ts"] <= MAX_AGE_SECONDS]
     save_history(history)
 
+    avg_5m = average_since(history, now, 5 * 60)
     avg_10m = average_since(history, now, 10 * 60)
     avg_30m = average_since(history, now, 30 * 60)
 
     min_watts, max_watts = history_stats(history)
-    text = format_compact(avg_10m)
+    mode = current_mode()
+    text = format_mode_label(mode, instant, avg_5m, avg_10m, avg_30m)
     tooltip = "\n".join(
         [
+            f"Display: {mode}",
             f"Status: {status}",
             f"Instant: {format_watts(instant)}",
+            f"5 min avg: {format_watts(avg_5m)}",
             f"10 min avg: {format_watts(avg_10m)}",
             f"30 min avg: {format_watts(avg_30m)}",
             f"Range: {format_watts(min_watts)} .. {format_watts(max_watts)}",
             f"Trend: {sparkline(history)}",
             f"Samples: {len(history)}",
+            "",
+            "Middle click: next display mode",
+            "Right click: clear history",
         ]
     )
     output = {
