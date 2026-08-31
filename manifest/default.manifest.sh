@@ -11,7 +11,7 @@ DOTBOOTSTRAP_COMPONENTS=(
   "fish|fish|.config/fish|optional|Fish shell config"
   "gtk3|gtk-3.0|.config/gtk-3.0|optional|GTK3 settings"
   "gtk4|gtk-4.0|.config/gtk-4.0|optional|GTK4 settings"
-  "kate|kate|.config/kate|optional|Kate editor config"
+  "kate|kate/katerc|.config/katerc|optional|Kate editor config"
   "themes|themes|.themes|optional|Local GTK theme assets"
   "kvantum|Kvantum|.config/Kvantum|optional|Kvantum Qt theme"
   "hypr|hypr|.config/hypr|optional|Hyprland config"
