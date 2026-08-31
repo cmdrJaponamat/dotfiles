@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+firefox_root="${HOME}/.mozilla/firefox"
+profiles_ini="${firefox_root}/profiles.ini"
+
+mkdir -p "${firefox_root}"
+
+if [[ ! -f "${profiles_ini}" ]]; then
+  cat > "${profiles_ini}" <<'EOF'
+[General]
+StartWithLastProfile=1
+Version=2
+
+[Profile0]
+Name=default
+IsRelative=1
+Path=default-release
+Default=1
+EOF
+fi
+
+profile_path=""
+if [[ -f "${profiles_ini}" ]]; then
+  profile_path="$(awk -F= '
+    /^\[Profile[0-9]+\]/ { in_profile=1; default=0; path="" }
+    in_profile && $1=="Default" && $2=="1" { default=1 }
+    in_profile && $1=="Path" { path=$2 }
+    in_profile && default==1 && path!="" { print path; exit }
+  ' "${profiles_ini}")"
+fi
+
+if [[ -z "${profile_path}" ]]; then
+  profile_path="default-release"
+fi
+
+if [[ "${profile_path}" != /* ]]; then
+  profile_dir="${firefox_root}/${profile_path}"
+else
+  profile_dir="${profile_path}"
+fi
+
+mkdir -p "${profile_dir}/chrome"
+
+cat > "${profile_dir}/user.js" <<'EOF'
+user_pref("browser.theme.toolbar-theme", 0);
+user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
+user_pref("layout.css.prefers-color-scheme.content-override", 0);
+user_pref("ui.systemUsesDarkTheme", 1);
+user_pref("widget.content.gtk-theme-override", "Gruvbox-Dark-BL");
+EOF
+
+echo "Configured Firefox profile: ${profile_dir}"

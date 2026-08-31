@@ -256,10 +256,13 @@ Core preset now includes:
 
 Full preset additionally includes:
 
-- `firefox`, `qbittorrent`, `nemo`, `imv`
+- `firefox`, `thunderbird`, `qbittorrent`, `nemo`, `imv`, `remmina`
 - `telegram-desktop`, `discord`
 - `max-bin`, `trueconf-client`
 - `portproton`
+- `mpv`, `vlc`, `obs-studio`
+- `libreoffice-fresh`, `libreoffice-fresh-ru`, `drawio-desktop`, `file-roller`, `okular`, `cmake`
+- theme runtime pieces: `papirus-icon-theme`, `kvantum`, `kvantum-qt5`
 
 Optional theme preview before restarting `SDDM`:
 
