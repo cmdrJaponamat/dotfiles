@@ -10,10 +10,17 @@ waybar_log="$HOME/.cache/niri/waybar.log"
 rgb_candidate="$niri_config/scripts/rgb"
 legacy_rgb_candidate="$HOME/.config/hypr/scripts/rgb"
 
-if [ -d "$niri_wallpaper_dir" ]; then
+has_wallpapers() {
+    [ -d "$1" ] || return 1
+    find "$1" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | grep -q .
+}
+
+if has_wallpapers "$niri_wallpaper_dir"; then
     wallpaper_dir="$niri_wallpaper_dir"
-else
+elif has_wallpapers "$legacy_wallpaper_dir"; then
     wallpaper_dir="$legacy_wallpaper_dir"
+else
+    wallpaper_dir="$niri_wallpaper_dir"
 fi
 
 default_wallpaper="$wallpaper_dir/home-sweet-home.jpg"

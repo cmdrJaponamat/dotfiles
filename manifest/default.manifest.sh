@@ -16,6 +16,7 @@ DOTBOOTSTRAP_COMPONENTS=(
   "mako|mako|.config/mako|optional|Mako notifications"
   "micro|micro|.config/micro|optional|Micro editor config"
   "niri|niri|.config/niri|optional|Niri compositor config"
+  "wallpapers|hypr/wallpapers|.config/niri/wallpapers|optional|Shared wallpaper pack for Niri session"
   "nvim|nvim|.config/nvim|optional|Neovim config"
   "qt5ct|qt5ct|.config/qt5ct|optional|Qt5 theme config"
   "qt6ct|qt6ct|.config/qt6ct|optional|Qt6 theme config"
@@ -43,6 +44,7 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
   "kvantum"
   "mako"
   "niri"
+  "wallpapers"
   "nvim"
   "qt5ct"
   "qt6ct"
@@ -63,6 +65,8 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
 DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "bootstrap-tools|minimal|always|git curl unzip|Base bootstrap tools"
   "session-base|minimal|always|foot alacritty wl-clipboard xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Minimal Wayland session base"
+  "font-stack|minimal|always|ttf-jetbrains-mono-nerd noto-fonts noto-fonts-emoji otf-font-awesome|Fonts required by the UI, icons and terminal apps"
+  "wallpaper-tools|minimal|always|awww|Wallpaper backend used by the Niri session"
   "niri-session|core|always|niri waybar mako rofi playerctl|Core Niri desktop session"
   "lockscreen|core|always|swayidle swaylock|Session lock tools"
   "display-manager|core|always|sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg qt6-imageformats|Display manager and SilentSDDM runtime"
@@ -86,7 +90,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
-  "minimal|bootstrap-tools session-base laptop-backlight wireless intel-gpu-tools amd-gpu-tools|Minimal bootable user environment"
+  "minimal|bootstrap-tools session-base font-stack wallpaper-tools laptop-backlight wireless intel-gpu-tools amd-gpu-tools|Minimal bootable user environment"
   "core|minimal niri-session lockscreen shell-tools editor-base file-tools desktop-tools capture-tools laptop-power aur-desktop|Daily-driver desktop setup"
   "full|core extra-editors theme-tools daily-apps messengers gaming-tools optional-gui|Full featured setup with optional apps"
 )

@@ -1072,6 +1072,33 @@ copy_component() {
   fi
 }
 
+target_home_owner() {
+  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
+    printf '%s\n' "${SUDO_USER}"
+    return 0
+  fi
+
+  basename "${TARGET_HOME}"
+}
+
+fix_target_ownership() {
+  local path="$1"
+  local owner
+
+  [[ "${EUID}" -eq 0 ]] || return 0
+  [[ -n "${TARGET_HOME:-}" ]] || return 0
+  [[ -e "${path}" ]] || return 0
+
+  case "${path}" in
+    "${TARGET_HOME}"|"${TARGET_HOME}/"*)
+      owner="$(target_home_owner)"
+      if id -u "${owner}" >/dev/null 2>&1; then
+        chown -R "${owner}:${owner}" "${path}"
+      fi
+      ;;
+  esac
+}
+
 install_packages_if_needed() {
   [[ "${PACKAGE_MODE}" != "never" ]] || return 0
   [[ "${#ACTIVE_PACKAGE_GROUP_ROWS[@]}" -gt 0 || "${#EXTRA_PACKAGES[@]}" -gt 0 ]] || return 0
@@ -1229,6 +1256,7 @@ run_install() {
   for row in "${ACTIVE_COMPONENT_ROWS[@]}"; do
     IFS='|' read -r name src dest mode desc <<< "${row}"
     copy_component "${name}" "${src}" "${dest}"
+    fix_target_ownership "$(resolve_dest_path "${dest}")"
   done
 
   if (( DRY_RUN )); then
