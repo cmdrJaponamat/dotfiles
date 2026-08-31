@@ -77,7 +77,6 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "intel-gpu-tools|minimal|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
-  "session-menu|core|always||Fallback session menu (install wlogout separately if needed)"
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
