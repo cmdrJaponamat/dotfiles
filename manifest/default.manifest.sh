@@ -82,7 +82,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "daily-apps|full|always|firefox qbittorrent nemo imv|Daily user applications"
   "messengers|full|always|telegram-desktop discord aur:max-bin aur:trueconf|Messaging and communication apps"
   "gaming-tools|full|always|aur:portproton|Gaming compatibility helpers"
-  "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
+  "optional-gui|full|always|nemo imv telegram-desktop hyprpicker|Optional GUI apps referenced by config"
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
