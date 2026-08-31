@@ -1164,6 +1164,14 @@ ensure_yay() {
   command -v yay >/dev/null 2>&1 || die "Failed to install yay"
 }
 
+run_as_invoking_user() {
+  if [[ "${EUID}" -eq 0 && -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
+    sudo -u "${SUDO_USER}" -- "$@"
+  else
+    "$@"
+  fi
+}
+
 install_aur_packages_if_needed() {
   [[ "${#AUR_PACKAGES[@]}" -gt 0 ]] || return 0
 
@@ -1184,10 +1192,10 @@ install_aur_packages_if_needed() {
   log "AUR install command:"
   if [[ "${ASSUME_YES}" -eq 1 ]]; then
     log "  yay -S --needed --noconfirm $(join_by ' ' "${aur_to_install[@]}")"
-    yay -S --needed --noconfirm "${aur_to_install[@]}"
+    run_as_invoking_user yay -S --needed --noconfirm "${aur_to_install[@]}"
   else
     log "  yay -S --needed $(join_by ' ' "${aur_to_install[@]}")"
-    yay -S --needed "${aur_to_install[@]}"
+    run_as_invoking_user yay -S --needed "${aur_to_install[@]}"
   fi
 }
 
