@@ -77,6 +77,12 @@ Preview full install including system login theme:
 ./bootstrap.sh --action install --dry-run --package-preset full --component sddm-theme --component sddm-config --component sddm-greeter
 ```
 
+Preview full install including bootloader theme:
+
+```bash
+./bootstrap.sh --action install --dry-run --component grub-theme --component grub-config
+```
+
 Hardware-aware install for another laptop:
 
 ```bash
@@ -226,6 +232,13 @@ Real install:
 
 ```bash
 sudo ./bootstrap.sh --action install --component sddm-theme --component sddm-config --component sddm-greeter --package-group display-manager --packages never --yes --target-home /
+```
+
+Apply GRUB theme:
+
+```bash
+sudo ./bootstrap.sh --action install --component grub-theme --component grub-config --packages never --yes --target-home /
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
 Full daily-driver install with the current desktop extras:

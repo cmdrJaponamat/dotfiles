@@ -790,6 +790,11 @@ print_post_install_steps() {
     log "  Optional preview before reboot: cd /usr/share/sddm/themes/silent && sudo ./test.sh"
   fi
 
+  if component_selected "grub-theme" || component_selected "grub-config"; then
+    log "  Regenerate GRUB after theme changes: sudo grub-mkconfig -o /boot/grub/grub.cfg"
+    log "  Reboot to verify the boot menu visuals on real hardware."
+  fi
+
   if contains "wifi" "${DETECTED_HARDWARE_TAGS[@]:-}" || contains "bluetooth" "${DETECTED_HARDWARE_TAGS[@]:-}"; then
     log "  Ensure NetworkManager and Bluetooth services are enabled if this laptop depends on them."
   fi

@@ -25,6 +25,8 @@ DOTBOOTSTRAP_COMPONENTS=(
   "sddm-theme|sddm/silent|/usr/share/sddm/themes/silent|optional|SilentSDDM theme"
   "sddm-config|sddm/10-theme.conf|/etc/sddm.conf.d/10-theme.conf|optional|SDDM theme selection"
   "sddm-greeter|sddm/20-silent-general.conf|/etc/sddm.conf.d/20-silent-general.conf|optional|SilentSDDM greeter environment"
+  "grub-theme|grub/themes/tartarus|/usr/share/grub/themes/tartarus|optional|Gruvbox GRUB theme"
+  "grub-config|grub/default-grub|/etc/default/grub|optional|GRUB theme selection and defaults"
   "swayidle|swayidle|.config/swayidle|optional|swayidle config"
   "swaylock|swaylock|.config/swaylock|optional|swaylock config"
   "wlogout|wlogout|.config/wlogout|optional|wlogout config"
