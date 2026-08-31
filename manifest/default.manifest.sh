@@ -91,7 +91,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "daily-apps|full|always|firefox thunderbird qbittorrent nemo imv remmina|Daily user applications"
   "messengers|full|always|telegram-desktop discord aur:max-bin aur:trueconf|Messaging and communication apps"
-  "network-apps|full|always|aur:flclashx-bin|Network utility applications"
+  "network-apps|full|always|libayatana-indicator aur:flclashx-bin|Network utility applications"
   "gaming-tools|full|always|aur:portproton|Gaming compatibility helpers"
   "media-tools|full|always|mpv vlc obs-studio|Media and recording applications"
   "office-tools|full|always|libreoffice-fresh libreoffice-fresh-ru drawio-desktop file-roller okular cmake|Office and utility applications"
