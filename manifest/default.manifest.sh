@@ -70,7 +70,7 @@ DOTBOOTSTRAP_DEFAULT_COMPONENTS=(
 
 DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "bootstrap-tools|minimal|always|git curl unzip|Base bootstrap tools"
-  "session-base|minimal|always|foot alacritty wl-clipboard pipewire pipewire-pulse wireplumber xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Minimal Wayland session base"
+  "session-base|minimal|always|foot alacritty wl-clipboard pipewire pipewire-pulse wireplumber xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite|Minimal Wayland session base"
   "font-stack|minimal|always|ttf-jetbrains-mono-nerd noto-fonts noto-fonts-emoji otf-font-awesome|Fonts required by the UI, icons and terminal apps"
   "wallpaper-tools|minimal|always|awww|Wallpaper backend used by the Niri session"
   "niri-session|core|always|niri waybar mako rofi playerctl|Core Niri desktop session"
