@@ -80,7 +80,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "file-tools|core|always|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
   "desktop-tools|core|always|pavucontrol blueman|Desktop control panels used by the session"
   "capture-tools|core|always|grim slurp|Screenshot selection tools"
-  "theme-tools|full|always|papirus-icon-theme kvantum kvantum-qt5 qt5ct qt6ct nwg-look|Theme helpers"
+  "theme-tools|full|always|papirus-icon-theme bibata-cursor-theme kvantum kvantum-qt5 qt5ct qt6ct nwg-look|Theme helpers"
   "laptop-backlight|minimal|backlight|brightnessctl light|Brightness control tools for laptops"
   "wireless|minimal|wifi bluetooth|networkmanager bluez bluez-utils|Wireless stack for laptops"
   "laptop-power|core|laptop battery|tlp|Laptop power management"
@@ -89,6 +89,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "daily-apps|full|always|firefox thunderbird qbittorrent nemo imv remmina|Daily user applications"
   "messengers|full|always|telegram-desktop discord aur:max-bin aur:trueconf|Messaging and communication apps"
+  "network-apps|full|always|aur:flclashx-bin|Network utility applications"
   "gaming-tools|full|always|aur:portproton|Gaming compatibility helpers"
   "media-tools|full|always|mpv vlc obs-studio|Media and recording applications"
   "office-tools|full|always|libreoffice-fresh libreoffice-fresh-ru drawio-desktop file-roller okular cmake|Office and utility applications"
@@ -98,7 +99,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
   "minimal|bootstrap-tools session-base font-stack wallpaper-tools laptop-backlight wireless intel-gpu-tools amd-gpu-tools|Minimal bootable user environment"
   "core|minimal niri-session lockscreen shell-tools editor-base file-tools desktop-tools capture-tools laptop-power aur-desktop|Daily-driver desktop setup"
-  "full|core extra-editors theme-tools daily-apps messengers gaming-tools media-tools office-tools optional-gui|Full featured setup with optional apps"
+  "full|core extra-editors theme-tools daily-apps messengers network-apps gaming-tools media-tools office-tools optional-gui|Full featured setup with optional apps"
 )
 
 DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET="core"
