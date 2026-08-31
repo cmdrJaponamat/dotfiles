@@ -1,0 +1,29 @@
+[General]
+Days Meta Infos=30
+PinnedDocuments=
+Save Meta Infos=true
+Show Full Path in Title=false
+Show Menu Bar=true
+Show Status Bar=true
+Show Tab Bar=true
+Show Url Nav Bar=true
+
+[KTextEditor Renderer]
+Animate Bracket Matching=false
+Auto Color Theme Selection=false
+Color Theme=gruvbox Dark
+Line Height Multiplier=1
+Show Indentation Lines=false
+Show Whole Bracket Expression=false
+Text Font=JetBrains Mono,11,-1,5,50,0,0,0,0,0,Regular
+Text Font Features=
+Word Wrap Marker=false
+
+[filetree]
+listMode=false
+middleClickToClose=false
+shadingEnabled=false
+showCloseButton=false
+showFullPathOnRoots=false
+showToolbar=true
+sortRole=0
