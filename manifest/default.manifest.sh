@@ -66,14 +66,17 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "niri-session|core|always|niri waybar mako rofi playerctl|Core Niri desktop session"
   "lockscreen|core|always|swayidle swaylock|Session lock tools"
   "display-manager|core|always|sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg qt6-imageformats|Display manager and SilentSDDM runtime"
-  "shell-tools|core|always|fish btop|Shell and terminal helpers"
+  "shell-tools|core|always|fish btop tmux fzf zoxide fastfetch|Shell and terminal helpers"
   "editor-base|core|always|neovim|Primary editor"
   "extra-editors|full|always|micro|Secondary editor"
   "file-tools|core|always|ranger zathura zathura-pdf-mupdf|File manager and PDF viewer"
+  "desktop-tools|core|always|pavucontrol blueman|Desktop control panels used by the session"
+  "capture-tools|core|always|grim slurp|Screenshot selection tools"
   "theme-tools|full|always|qt5ct qt6ct nwg-look|Theme helpers"
   "laptop-backlight|minimal|backlight|brightnessctl light|Brightness control tools for laptops"
   "wireless|minimal|wifi bluetooth|networkmanager bluez bluez-utils|Wireless stack for laptops"
   "laptop-power|core|laptop battery|tlp|Laptop power management"
+  "aur-desktop|core|always|aur:yay-bin aur:wlogout|AUR-backed desktop helpers"
   "intel-gpu-tools|minimal|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
@@ -81,15 +84,13 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
   "minimal|bootstrap-tools session-base laptop-backlight wireless intel-gpu-tools amd-gpu-tools|Minimal bootable user environment"
-  "core|minimal niri-session lockscreen shell-tools editor-base file-tools laptop-power|Daily-driver desktop setup"
+  "core|minimal niri-session lockscreen shell-tools editor-base file-tools desktop-tools capture-tools laptop-power aur-desktop|Daily-driver desktop setup"
   "full|core extra-editors theme-tools optional-gui|Full featured setup with optional apps"
 )
 
 DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET="core"
 
 DOTBOOTSTRAP_OPTIONAL_FLOWS=(
-  "aur-helper|always|Install an AUR helper manually if you want AUR-backed extras later|Example: yay or paru"
-  "wlogout-aur|always|Install wlogout manually from AUR or another trusted source before treating the power menu as complete|The copied config is ready in ~/.config/wlogout"
   "slimbookbattery|laptop battery|Optional tray frontend for TLP profiles; keep disabled by default unless you want live profile switching|AUR/manual install only"
   "nvidia-proprietary|nvidia_gpu|Review proprietary NVIDIA driver flow manually before treating install as complete|Packages depend on GPU generation and kernel choice"
   "display-manager-enable|always|If SDDM was installed, enable its system service before reboot|sudo systemctl enable sddm.service"

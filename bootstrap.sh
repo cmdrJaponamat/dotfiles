@@ -59,11 +59,13 @@ HARDWARE_PROFILE="auto"
 PROBE_ONLY=0
 UI_DENSITY="auto"
 ACTIVE_UI_DENSITY=""
+PACKAGE_MANAGER="unknown"
 
 declare -a DETECTED_HARDWARE_TAGS=()
 declare -a HARDWARE_FACTS=()
 declare -a HARDWARE_PROBE_NOTES=()
 declare -a HARDWARE_PROBE_RECOMMENDATIONS=()
+declare -a AUR_PACKAGES=()
 declare -A PROBE_METRICS=()
 declare -A UI_PROFILE=()
 
@@ -1086,27 +1088,34 @@ install_packages_if_needed() {
     IFS='|' read -r name tier selector package_list desc <<< "${row}"
     read -r -a parsed <<< "${package_list}"
     for pkg in "${parsed[@]}"; do
-      contains "${pkg}" "${packages[@]}" || packages+=("${pkg}")
+      if [[ "${pkg}" == aur:* ]]; then
+        pkg="${pkg#aur:}"
+        contains "${pkg}" "${AUR_PACKAGES[@]}" || AUR_PACKAGES+=("${pkg}")
+      else
+        contains "${pkg}" "${packages[@]}" || packages+=("${pkg}")
+      fi
     done
   done
 
   for pkg in "${EXTRA_PACKAGES[@]}"; do
-    contains "${pkg}" "${packages[@]}" || packages+=("${pkg}")
+    if [[ "${pkg}" == aur:* ]]; then
+      pkg="${pkg#aur:}"
+      contains "${pkg}" "${AUR_PACKAGES[@]}" || AUR_PACKAGES+=("${pkg}")
+    else
+      contains "${pkg}" "${packages[@]}" || packages+=("${pkg}")
+    fi
   done
 
-  [[ "${#packages[@]}" -gt 0 ]] || return 0
-  local cmd
-  cmd="$(package_install_cmd "${packages[@]}")" || {
-    warn "no install command template for ${PACKAGE_MANAGER}"
-    return 0
-  }
+  if [[ "${#packages[@]}" -gt 0 ]]; then
+    local cmd
+    cmd="$(package_install_cmd "${packages[@]}")" || {
+      warn "no install command template for ${PACKAGE_MANAGER}"
+      return 0
+    }
 
-  log
-  log "Package install command:"
-  log "  ${cmd}"
-
-  if (( DRY_RUN )); then
-    return 0
+    log
+    log "Package install command:"
+    log "  ${cmd}"
   fi
 
   if [[ "${PACKAGE_MODE}" == "auto" && "${ASSUME_YES}" -ne 1 ]]; then
@@ -1114,7 +1123,72 @@ install_packages_if_needed() {
     [[ "${answer}" =~ ^[Yy]$ ]] || return 0
   fi
 
-  eval "${cmd}"
+  if (( DRY_RUN )); then
+    if [[ "${#AUR_PACKAGES[@]}" -gt 0 ]]; then
+      log "AUR install command:"
+      log "  aur packages: $(join_by ' ' "${AUR_PACKAGES[@]}")"
+    fi
+    return 0
+  fi
+
+  if [[ "${#packages[@]}" -gt 0 ]]; then
+    eval "${cmd}"
+  fi
+
+  install_aur_packages_if_needed
+}
+
+ensure_yay() {
+  command -v yay >/dev/null 2>&1 && return 0
+  [[ "${PACKAGE_MANAGER}" == "pacman" ]] || die "AUR packages are only supported automatically on pacman systems"
+
+  log
+  log "Preparing AUR helper yay-bin"
+
+  local bootstrap_cmd
+  bootstrap_cmd="$(package_install_cmd base-devel git)" || die "Unable to build install command for base-devel git"
+  eval "${bootstrap_cmd}"
+
+  local workdir
+  workdir="$(mktemp -d)"
+  git clone --depth 1 https://aur.archlinux.org/yay-bin.git "${workdir}/yay-bin" >/dev/null
+  (
+    cd "${workdir}/yay-bin"
+    if [[ "${ASSUME_YES}" -eq 1 ]]; then
+      makepkg -si --noconfirm --needed
+    else
+      makepkg -si --needed
+    fi
+  )
+  rm -rf "${workdir}"
+  command -v yay >/dev/null 2>&1 || die "Failed to install yay"
+}
+
+install_aur_packages_if_needed() {
+  [[ "${#AUR_PACKAGES[@]}" -gt 0 ]] || return 0
+
+  local aur_to_install=()
+  local pkg
+  for pkg in "${AUR_PACKAGES[@]}"; do
+    [[ "${pkg}" == "yay-bin" ]] && continue
+    aur_to_install+=("${pkg}")
+  done
+
+  ensure_yay
+
+  if [[ "${#aur_to_install[@]}" -eq 0 ]]; then
+    return 0
+  fi
+
+  log
+  log "AUR install command:"
+  if [[ "${ASSUME_YES}" -eq 1 ]]; then
+    log "  yay -S --needed --noconfirm $(join_by ' ' "${aur_to_install[@]}")"
+    yay -S --needed --noconfirm "${aur_to_install[@]}"
+  else
+    log "  yay -S --needed $(join_by ' ' "${aur_to_install[@]}")"
+    yay -S --needed "${aur_to_install[@]}"
+  fi
 }
 
 run_install() {

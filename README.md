@@ -90,7 +90,7 @@ Hardware-aware install with automatic UI density selection:
 ```
 
 The install output now ends with a post-install checklist for the detected hardware so you know what still needs relogin, reboot, service enablement or manual GPU follow-up.
-It also shows optional manual flows for things that should not be auto-applied blindly, such as AUR extras, service enablement and proprietary NVIDIA setup.
+It also shows optional manual flows for things that should not be auto-applied blindly, such as service enablement and proprietary NVIDIA setup.
 
 Force a smaller or larger interface profile:
 
@@ -227,6 +227,19 @@ Real install:
 ```bash
 sudo ./bootstrap.sh --action install --component sddm-theme --component sddm-config --component sddm-greeter --package-group display-manager --packages never --yes --target-home /
 ```
+
+Full daily-driver install with the current desktop extras:
+
+```bash
+sudo ./bootstrap.sh --action install --package-preset core --hardware-profile laptop --ui-density auto --yes --target-home /home/$USER
+```
+
+Core preset now includes:
+
+- `tmux`, `fzf`, `zoxide`, `fastfetch`
+- `pavucontrol`, `blueman`
+- `grim`, `slurp`
+- automatic AUR bootstrap for `yay-bin` and `wlogout`
 
 Optional theme preview before restarting `SDDM`:
 
