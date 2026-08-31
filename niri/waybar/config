@@ -179,6 +179,9 @@
             "car": "",
             "default": ["", " ", " "]
         },
+        "on-scroll-up": "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +3%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -3%",
+        "on-click-middle": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
