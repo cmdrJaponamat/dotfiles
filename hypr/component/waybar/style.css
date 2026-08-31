@@ -67,9 +67,9 @@
 window#waybar {
     background: @bg0;
     color: @fg;
-    font-family: "Cantarell", "Ubuntu Nerd Font";/*Font Awesome 5 Pro*/
-    font-size: 9pt;
-    font-weight: bold;
+    font-family: "JetBrains Mono Nerd Font", "JetBrains Mono", "Cantarell";
+    font-size: 10pt;
+    font-weight: 700;
 }
 
 /* Each module */
@@ -167,29 +167,52 @@ window#waybar {
     background: @left-bg;
     color: @fg;
 }
+#custom-niri-language {
+    background: @right-accent;
+    color: @fg;
+    padding: 0.55em 0.95em;
+    min-width: 3.2em;
+}
+#custom-niri-language.en {
+    background: @blue;
+    color: @bg0;
+}
+#custom-niri-language.ru {
+    background: @green;
+    color: @bg0;
+}
+#custom-niri-language.unknown {
+    background: @bg2;
+    color: @fg-muted;
+}
 #custom-pacman {
     background: @left-alt;
     color: @bg0;
+    padding: 0.6em 0.85em;
 }
 #idle_inhibitor {
     background: @bg2;
     color: @fg;
 }
 #custom-playerctl {
-    font-size: 0.9em;
     background: @bg0;
     color: @fg-muted;
+    min-width: 0;
 }
 #custom-playerctl.paused{
     color: @fg-muted;
-    font-size: 0.9em;
+}
+#custom-playerctl.stopped {
+    background: transparent;
+    color: transparent;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
 }
 /* Workspaces stuff */
 #workspaces {
 }
 #workspaces button {
-    font-size: 16px;
-    font-weight: bolder;
     background: @center-bg;
     padding: 0em 1.2em;
     margin: 0.45em 0.25em;
@@ -197,8 +220,6 @@ window#waybar {
     min-width: 0em;
 }
 #workspaces button.focused {
-    font-weight: bolder; /* Somewhy the bar-wide setting is ignored*/
-    font-size: 18px;
     background: @yellow;
     color: @bg0;
 }
@@ -216,8 +237,12 @@ window#waybar {
 #cpu {
     background: @right-bg;
     color: @fg;
-    padding-left: 0em;
-    padding-right: 0.2em;
+    padding-left: 0.85em;
+    padding-right: 0.95em;
+}
+#cpu.warning {
+    background: @yellow;
+    color: @bg0;
 }
 #cpu.critical {
     color: @bg0;
@@ -226,7 +251,11 @@ window#waybar {
 #temperature {
     background-color: @right-bg;
     color: @fg;
-    padding-right: 0em;
+    padding-right: 0.95em;
+}
+#temperature.warning {
+    background: @orange;
+    color: @bg0;
 }
 #temperature.critical {
     background:  @critical;
@@ -274,8 +303,25 @@ window#waybar {
     background: @bg1;
 }
 #battery {
-    background: @battery-bg;
+    background: @aqua;
+    color: @bg0;
+}
+#battery.good {
+    background: @aqua;
+    color: @bg0;
+}
+#battery.warning {
+    background: @yellow;
+    color: @bg0;
+}
+#battery.critical {
+    background: @red;
     color: @fg;
+}
+#battery.charging,
+#battery.plugged {
+    background: @green;
+    color: @bg0;
 }
 
 #backlight {

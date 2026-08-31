@@ -7,9 +7,9 @@
     // "custom/gpu",  "custom/weather","sway/window", "custom/gpu",  "custom/media",  
     // Choose the order of the modules
 
-    "modules-left": ["clock#time", "clock#date", "hyprland/language", "custom/pacman", "idle_inhibitor", "custom/playerctl"],
+    "modules-left": ["clock#time", "clock#date", "custom/pacman", "idle_inhibitor", "custom/playerctl"],
     "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["temperature", "cpu", "custom/gpu", "network", "bluetooth", "pulseaudio", "battery", "tray"],
+    "modules-right": ["temperature", "cpu", "custom/gpu", "network", "bluetooth", "pulseaudio", "battery", "custom/niri-language", "tray"],
     
     // Modules configuration
     "hyprland/workspaces": {
@@ -51,12 +51,13 @@
         "on-click": "blueman-manager",
         "on-click-right": "blueman-adapters"
     },    
-    "hyprland/language": {
-        "format": "   {}",
-        "format-en": "En",
-        "format-ru": "Ru",
-        "max-length": 5,
-        "min-length": 4
+    "custom/niri-language": {
+        "exec": "$HOME/.config/niri/waybar/custom_modules/niri-language.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 2,
+        "max-length": 8,
+        "min-length": 6
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -72,12 +73,12 @@
     },
     "clock#time": {
         "interval": 10,
-        "format": "  {:%H:%M}",
+        "format": " {:%H:%M}",
         "tooltip": false
     },
     "clock#date": {
         "interval": 20,
-        "format": "  {:%a %Y %b %d}",
+        "format": " {:%a %Y %b %d}",
         "on-click": "alacritty --class calendar -e calcure",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "today-format": "<b><u>{}</u></b>"
@@ -85,17 +86,25 @@
     "temperature": {
         //"thermal-zone": 1,
         "interval": 1,
+        "states": {
+            "warning": 60,
+            "critical": 75
+        },
         "critical-threshold": 75,
-        "format-critical": "  {temperatureC}°C",
-        "format": "{icon}  {temperatureC}°C",
+        "format-critical": " {temperatureC}°C",
+        "format": "{icon} {temperatureC}°C",
         "format-icons": ["", "", ""],
         "max-length": 8,
         "min-length": 7,
         "tooltip": false
     },
     "cpu": {
-        "interval": 5,      
-        "format": "  {max_frequency:1}GHz  󰓅  {usage:2}%",
+        "interval": 5,
+        "states": {
+            "warning": 45,
+            "critical": 80
+        },
+        "format": " {max_frequency:1}GHz 󰓅 {usage:2}%",
         "on-click": "alacritty -e btop",
         "tooltip": false
     },
@@ -108,7 +117,7 @@
     },
     "network": {
         // "interface": "wlan0", // (Optional) To force the use of this interface,
-        "format-wifi": "<span color=\"#ebdbb2\"> </span>  {essid}",
+        "format-wifi": "<span color=\"#ebdbb2\"></span> {essid}",
         "format-ethernet": "{ifname}: {ipaddr}/{cidr}  ",
         "format-linked": "{ifname} (No IP) 󰈁",
         "format-disconnected": "󱚵 ",
@@ -131,17 +140,17 @@
             "warning": 50,
             "critical": 20
         },
-        "format": "{icon}  {capacity}%",
-        "format-good": "{icon}  {capacity}%",
-        "format-full": "{icon}  {capacity}%",
-        "format-charging": "{icon}  {capacity}%",
+        "format": "{icon} {capacity}%",
+        "format-good": "{icon} {capacity}%",
+        "format-full": "{icon} {capacity}%",
+        "format-charging": "{icon} {capacity}%",
         "format-plugged": "{icon} {capacity}%",
         "format-icons": [" ", " ", " ", " ", " "]
     },
 
     "pulseaudio": {
         "scroll-step": 3, // %, can be a float
-        "format": "{icon}  {volume:3}% {format_source}",
+        "format": "{icon} {volume:3}% {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": "󰗿 {icon} {format_source}",
         "format-muted": " {format_source}",
@@ -160,7 +169,7 @@
         "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
     },
     "custom/pacman": {
-        "format": "<big>󰚰</big>  {}",
+        "format": "<big>󰚰</big> {}",
         "interval": 3600,                     // every hour
         "exec": "checkupdates | wc -l",       // # of updates
         "exec-if": "exit 0",                  // always run; consider advanced run conditions
@@ -191,7 +200,9 @@
     "custom/playerctl": {
         "exec": "$HOME/.config/hypr/component/waybar/custom_modules/media-player-status.py",
         "return-type": "json",
-        "on-click": "playerctl play-pause"
+        "on-click": "playerctl play-pause",
+        "max-length": 36,
+        "tooltip": true
     },
     "custom/media": {
         "format": "{icon} {}",

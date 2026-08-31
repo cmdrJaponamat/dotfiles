@@ -368,6 +368,7 @@ binds {
     // Hyprland-compatible extra binds added without overriding existing niri binds.
     Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
     Mod+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "~/.config/rofi/launchers/type-2/launcher.sh"; }
+    Mod+Shift+A hotkey-overlay-title="Open AI Launcher" { spawn-sh "~/.local/bin/ai-launcher"; }
     Mod+Shift+P hotkey-overlay-title="Open Power Menu: wlogout" { spawn-sh "~/.local/bin/power-menu"; }
     Mod+Ctrl+Equal hotkey-overlay-title="Increase UI Density" { spawn-sh "~/.local/bin/ui-density up"; }
     Mod+Ctrl+Minus hotkey-overlay-title="Decrease UI Density" { spawn-sh "~/.local/bin/ui-density down"; }

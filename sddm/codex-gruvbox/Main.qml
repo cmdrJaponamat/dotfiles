@@ -86,7 +86,6 @@ Rectangle {
                 font.family: root.uiFont
                 font.pixelSize: 34
                 font.bold: true
-                letterSpacing: 4
             }
 
             Text {
@@ -97,7 +96,6 @@ Rectangle {
                 opacity: 0.85
                 font.family: root.uiFont
                 font.pixelSize: 15
-                letterSpacing: 2
             }
         }
 
@@ -213,22 +211,14 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
             text: textConstants.login
-
-            contentItem: Text {
-                text: loginButton.text
-                color: root.bg0Hard
-                font.family: root.uiFont
-                font.pixelSize: 17
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-
-            background: Rectangle {
-                radius: 14
-                color: loginButton.down ? Qt.darker(root.yellow, 1.15) : root.yellow
-                border.width: 0
-            }
+            color: root.yellow
+            textColor: root.bg0Hard
+            borderColor: root.yellow
+            pressedColor: root.blue
+            activeColor: root.aqua
+            font.family: root.uiFont
+            font.pixelSize: 17
+            font.weight: Font.DemiBold
 
             onClicked: sddm.login(username.text, password.text, session.index)
 

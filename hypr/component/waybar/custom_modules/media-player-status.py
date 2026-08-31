@@ -17,8 +17,17 @@ ICONS = {
     'default': '契 ',
     'paused': ' '
 }
+MAX_TEXT_CHARS = 34
 
 last_status = None
+
+
+def truncate_text(text, limit):
+    if len(text) <= limit:
+        return text
+    if limit <= 1:
+        return text[:limit]
+    return text[:limit - 1] + "…"
 
 
 def find_active_player(manager, vanished_player):
@@ -68,7 +77,7 @@ def get_status(manager, vanished_player):
         song = f'{title}'
     else:
         song = f'{artist} – {title}'
-    html_song = html.escape(song)
+    html_song = html.escape(truncate_text(song, MAX_TEXT_CHARS))
     return f'{icon} {html_song}', f'{name.title()}: {song}', css_class
 
 
