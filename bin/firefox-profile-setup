@@ -22,42 +22,49 @@ fi
 
 profile_path=""
 if [[ -f "${profiles_ini}" ]]; then
+  install_default="$(sed -n 's/^Default=//p' "${profiles_ini}" | tail -n 1)"
+  if [[ -n "${install_default}" ]]; then
+    profile_path="${install_default}"
+  fi
+
   current_section=""
   current_path=""
   current_default="0"
 
-  while IFS= read -r line; do
-    case "${line}" in
-      "[Profile"*)
-        if [[ "${current_default}" == "1" && -n "${current_path}" ]]; then
-          profile_path="${current_path}"
-          break
-        fi
-        current_section="${line}"
-        current_path=""
-        current_default="0"
-        ;;
-      Path=*)
-        if [[ -n "${current_section}" ]]; then
-          current_path="${line#Path=}"
-        fi
-        ;;
-      Default=1)
-        if [[ -n "${current_section}" ]]; then
-          current_default="1"
-        fi
-        ;;
-      "")
-        if [[ "${current_default}" == "1" && -n "${current_path}" ]]; then
-          profile_path="${current_path}"
-          break
-        fi
-        ;;
-    esac
-  done < "${profiles_ini}"
+  if [[ -z "${profile_path}" ]]; then
+    while IFS= read -r line; do
+      case "${line}" in
+        "[Profile"*)
+          if [[ "${current_default}" == "1" && -n "${current_path}" ]]; then
+            profile_path="${current_path}"
+            break
+          fi
+          current_section="${line}"
+          current_path=""
+          current_default="0"
+          ;;
+        Path=*)
+          if [[ -n "${current_section}" ]]; then
+            current_path="${line#Path=}"
+          fi
+          ;;
+        Default=1)
+          if [[ -n "${current_section}" ]]; then
+            current_default="1"
+          fi
+          ;;
+        "")
+          if [[ "${current_default}" == "1" && -n "${current_path}" ]]; then
+            profile_path="${current_path}"
+            break
+          fi
+          ;;
+      esac
+    done < "${profiles_ini}"
 
-  if [[ -z "${profile_path}" && "${current_default}" == "1" && -n "${current_path}" ]]; then
-    profile_path="${current_path}"
+    if [[ -z "${profile_path}" && "${current_default}" == "1" && -n "${current_path}" ]]; then
+      profile_path="${current_path}"
+    fi
   fi
 fi
 
@@ -77,8 +84,120 @@ cat > "${profile_dir}/user.js" <<'EOF'
 user_pref("browser.theme.toolbar-theme", 0);
 user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
 user_pref("layout.css.prefers-color-scheme.content-override", 0);
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("ui.systemUsesDarkTheme", 1);
 user_pref("widget.content.gtk-theme-override", "Gruvbox-Dark-BL");
+EOF
+
+cat > "${profile_dir}/chrome/userChrome.css" <<'EOF'
+:root {
+  --gb-bg0: #282828;
+  --gb-bg1: #3c3836;
+  --gb-bg2: #504945;
+  --gb-fg0: #fbf1c7;
+  --gb-fg1: #ebdbb2;
+  --gb-yellow: #d79921;
+  --gb-green: #98971a;
+  --gb-blue: #458588;
+  --gb-aqua: #689d6a;
+  --gb-orange: #d65d0e;
+}
+
+#navigator-toolbox,
+#titlebar,
+#TabsToolbar,
+#nav-bar,
+#PersonalToolbar,
+.tab-background,
+#sidebar-box,
+#urlbar-background {
+  background: var(--gb-bg0) !important;
+  color: var(--gb-fg1) !important;
+  border-color: var(--gb-bg2) !important;
+}
+
+.tabbrowser-tab[selected="true"] .tab-background {
+  background: var(--gb-bg1) !important;
+  border-top: 2px solid var(--gb-yellow) !important;
+}
+
+.tabbrowser-tab:hover .tab-background,
+toolbarbutton:hover,
+#urlbar[open] > #urlbar-background,
+#urlbar:hover > #urlbar-background {
+  background: var(--gb-bg1) !important;
+}
+
+#urlbar-input,
+.urlbarView-row,
+.urlbarView-title,
+.tab-label,
+toolbarbutton,
+#TabsToolbar .toolbarbutton-1,
+#nav-bar .toolbarbutton-1 {
+  color: var(--gb-fg1) !important;
+}
+
+.urlbarView-row[selected],
+menupopup menu[_moz-menuactive="true"],
+menupopup menuitem[_moz-menuactive="true"] {
+  background: var(--gb-blue) !important;
+  color: var(--gb-fg0) !important;
+}
+
+menupopup,
+panel,
+.panel-subview-body,
+.panel-arrowcontent {
+  background: var(--gb-bg0) !important;
+  color: var(--gb-fg1) !important;
+  border-color: var(--gb-bg2) !important;
+}
+
+#downloads-indicator-progress-outer,
+progress {
+  --download-progress-fill-color: var(--gb-green) !important;
+}
+
+#statuspanel-label {
+  background: var(--gb-bg1) !important;
+  color: var(--gb-fg1) !important;
+  border-color: var(--gb-bg2) !important;
+}
+EOF
+
+cat > "${profile_dir}/chrome/userContent.css" <<'EOF'
+@-moz-document url-prefix("about:"), url-prefix("chrome://browser/content/") {
+  :root {
+    --gb-bg0: #282828;
+    --gb-bg1: #3c3836;
+    --gb-bg2: #504945;
+    --gb-fg0: #fbf1c7;
+    --gb-fg1: #ebdbb2;
+    --gb-yellow: #d79921;
+    --gb-blue: #458588;
+  }
+
+  html, body, page, .main-content, .navigation, .category, .pane-container {
+    background: var(--gb-bg0) !important;
+    color: var(--gb-fg1) !important;
+  }
+
+  input, textarea, select, button, .card, .dialogBox, richlistbox, richlistitem {
+    background: var(--gb-bg1) !important;
+    color: var(--gb-fg1) !important;
+    border-color: var(--gb-bg2) !important;
+  }
+
+  a, .text-link {
+    color: var(--gb-blue) !important;
+  }
+
+  .category[selected], button.primary {
+    background: var(--gb-yellow) !important;
+    color: var(--gb-bg0) !important;
+  }
+}
 EOF
 
 echo "Configured Firefox profile: ${profile_dir}"

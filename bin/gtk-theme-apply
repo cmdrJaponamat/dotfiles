@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+apply_schema() {
+  local schema="$1"
+  gsettings set "${schema}" gtk-theme "Gruvbox-Dark-BL" 2>/dev/null || true
+  gsettings set "${schema}" icon-theme "Papirus-Dark" 2>/dev/null || true
+  gsettings set "${schema}" cursor-theme "Bibata-Modern-Ice" 2>/dev/null || true
+  gsettings set "${schema}" font-name "JetBrains Mono 11" 2>/dev/null || true
+}
+
+apply_schema org.gnome.desktop.interface
+apply_schema org.cinnamon.desktop.interface
+gsettings set org.gnome.desktop.interface color-scheme "prefer-dark" 2>/dev/null || true
+
+echo "Applied GTK theme settings via gsettings"
