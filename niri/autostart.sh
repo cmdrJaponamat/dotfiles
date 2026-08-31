@@ -38,7 +38,15 @@ fi
 
 mkdir -p "$(dirname "$waybar_log")"
 
-dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri NIRI_SOCKET
+export QT_QPA_PLATFORMTHEME=qt6ct
+export QT_STYLE_OVERRIDE=kvantum-dark
+
+dbus-update-activation-environment --systemd \
+    WAYLAND_DISPLAY \
+    XDG_CURRENT_DESKTOP=niri \
+    NIRI_SOCKET \
+    QT_QPA_PLATFORMTHEME \
+    QT_STYLE_OVERRIDE
 
 pkill waybar 2>/dev/null || true
 (
