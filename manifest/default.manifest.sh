@@ -64,7 +64,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "bootstrap-tools|minimal|always|git curl unzip|Base bootstrap tools"
   "session-base|minimal|always|foot alacritty wl-clipboard xdg-desktop-portal-gtk xdg-desktop-portal-gnome|Minimal Wayland session base"
   "niri-session|core|always|niri waybar mako rofi playerctl|Core Niri desktop session"
-  "lockscreen|core|always|swayidle swaylock wlogout|Session lock and exit tools"
+  "lockscreen|core|always|swayidle swaylock|Session lock tools"
   "display-manager|core|always|sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg qt6-imageformats|Display manager and SilentSDDM runtime"
   "shell-tools|core|always|fish btop|Shell and terminal helpers"
   "editor-base|core|always|neovim|Primary editor"
@@ -77,7 +77,7 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "intel-gpu-tools|minimal|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
   "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
-  "session-menu|core|always|wlogout|Fallback session menu"
+  "session-menu|core|always||Fallback session menu (install wlogout separately if needed)"
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
@@ -90,6 +90,7 @@ DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET="core"
 
 DOTBOOTSTRAP_OPTIONAL_FLOWS=(
   "aur-helper|always|Install an AUR helper manually if you want AUR-backed extras later|Example: yay or paru"
+  "wlogout-aur|always|Install wlogout manually from AUR or another trusted source before treating the power menu as complete|The copied config is ready in ~/.config/wlogout"
   "slimbookbattery|laptop battery|Optional tray frontend for TLP profiles; keep disabled by default unless you want live profile switching|AUR/manual install only"
   "nvidia-proprietary|nvidia_gpu|Review proprietary NVIDIA driver flow manually before treating install as complete|Packages depend on GPU generation and kernel choice"
   "display-manager-enable|always|If SDDM was installed, enable its system service before reboot|sudo systemctl enable sddm.service"
