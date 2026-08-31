@@ -907,7 +907,11 @@ package_install_cmd() {
   local packages=("$@")
   case "${PACKAGE_MANAGER}" in
     pacman)
-      printf 'sudo pacman -S --needed %s' "$(join_by ' ' "${packages[@]}")"
+      if (( ASSUME_YES )); then
+        printf 'sudo pacman -S --needed --noconfirm %s' "$(join_by ' ' "${packages[@]}")"
+      else
+        printf 'sudo pacman -S --needed %s' "$(join_by ' ' "${packages[@]}")"
+      fi
       ;;
     apt)
       printf 'sudo apt-get install -y %s' "$(join_by ' ' "${packages[@]}")"
