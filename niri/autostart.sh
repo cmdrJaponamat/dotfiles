@@ -41,7 +41,13 @@ mkdir -p "$(dirname "$waybar_log")"
 export QT_QPA_PLATFORMTHEME=qt6ct
 export QT_STYLE_OVERRIDE=kvantum-dark
 
+# X11-only applications under Niri still need a DISPLAY value for Xwayland.
+if command -v xwayland-satellite >/dev/null 2>&1 && [ -z "${DISPLAY:-}" ]; then
+    export DISPLAY=:1
+fi
+
 dbus-update-activation-environment --systemd \
+    DISPLAY \
     WAYLAND_DISPLAY \
     XDG_CURRENT_DESKTOP=niri \
     NIRI_SOCKET \
