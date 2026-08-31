@@ -241,6 +241,13 @@ Core preset now includes:
 - `grim`, `slurp`
 - automatic AUR bootstrap for `yay-bin` and `wlogout`
 
+Full preset additionally includes:
+
+- `firefox`, `qbittorrent`, `nemo`, `imv`
+- `telegram-desktop`, `discord`
+- `max-bin`, `trueconf-client`
+- `portproton`
+
 Optional theme preview before restarting `SDDM`:
 
 ```bash

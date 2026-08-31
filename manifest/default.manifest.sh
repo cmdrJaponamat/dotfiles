@@ -79,13 +79,16 @@ DOTBOOTSTRAP_PACKAGE_GROUPS=(
   "aur-desktop|core|always|aur:yay-bin aur:wlogout|AUR-backed desktop helpers"
   "intel-gpu-tools|minimal|intel_gpu|intel-media-driver vulkan-intel|Intel graphics userland"
   "amd-gpu-tools|minimal|amd_gpu|mesa vulkan-radeon|AMD graphics userland"
+  "daily-apps|full|always|firefox qbittorrent nemo imv|Daily user applications"
+  "messengers|full|always|telegram-desktop discord aur:max-bin aur:trueconf|Messaging and communication apps"
+  "gaming-tools|full|always|aur:portproton|Gaming compatibility helpers"
   "optional-gui|full|always|nemo imv telegram-desktop hyprpicker wl-color-picker|Optional GUI apps referenced by config"
 )
 
 DOTBOOTSTRAP_PACKAGE_PRESETS=(
   "minimal|bootstrap-tools session-base laptop-backlight wireless intel-gpu-tools amd-gpu-tools|Minimal bootable user environment"
   "core|minimal niri-session lockscreen shell-tools editor-base file-tools desktop-tools capture-tools laptop-power aur-desktop|Daily-driver desktop setup"
-  "full|core extra-editors theme-tools optional-gui|Full featured setup with optional apps"
+  "full|core extra-editors theme-tools daily-apps messengers gaming-tools optional-gui|Full featured setup with optional apps"
 )
 
 DOTBOOTSTRAP_DEFAULT_PACKAGE_PRESET="core"
